@@ -15,10 +15,11 @@ Google Summer of Code Goal List
 - 6/24 (Wednesday)
 	[x] Use the new functions in the fishy game
 	[x] Update numClients number when someone disconnects
-	[] Get client to notify server that it disconnects
-	[] Have server include a distinction between connection/disconnection events
-	[] Build that distinction into fishy game
-	[] Complete simple fishy game
+	[x] Get client to notify server that it disconnects
+	[x] Have server include a distinction between connection/disconnection events
+	[x] Build that distinction into fishy game
+	[x] Intersection detection (game logic)
+	[] Address individual clients when they have lost the game
 	[] Simple tutorial using the new functions / non broadcast tutorial
 - 6/24 (Thursday)
 - 6/25 (Friday)

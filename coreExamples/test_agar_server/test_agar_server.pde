@@ -56,7 +56,6 @@ void draw()
   {
     if(checkCollision(i))
     {
-      println("Ah fuck, I can't believe you've done this");
     }
   }
   

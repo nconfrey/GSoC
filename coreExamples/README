@@ -1,0 +1,9 @@
+These sketches are examples of the new features added to the core Processing network library. NOTE: In order for these sketches to run, you also need my changes to the network library (currently in my forked branch from the Processing source code).
+
+Key Changes:
+
+- Access to the clientList and number of clients from the server objects
+- New event handling for disconnections
+- the event handler serverEvent is now serverEvent(Server, Client, String), which can be either "connect" or "disconnect"
+
+TODO: make these a static final in Server or an event object 

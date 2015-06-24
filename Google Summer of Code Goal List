@@ -1,0 +1,24 @@
+Google Summer of Code Goal List
+
+================== Day by Day Goals ==========================
+
+- 6/22 (Monday)
+	[x] Attempt to create networked game, writeup findings
+	[-] Attempt to query APIs, use internet data, writeup findings
+	[x] Read over server source code
+	[x] Read over client source code
+- 6/23 (Tuesday)
+	[x] Complete call w/ Shiffman 10AM
+	[x] Clone source code, get it so I can edit server.java
+	[x] Edit server.java such that I can access client lists
+	[x] Recompile Server.java so that I can use the new / modified functions in Processing
+- 6/24 (Wednesday)
+	[x] Use the new functions in the fishy game
+	[x] Update numClients number when someone disconnects
+	[] Get client to notify server that it disconnects
+	[] Have server include a distinction between connection/disconnection events
+	[] Build that distinction into fishy game
+	[] Complete simple fishy game
+	[] Simple tutorial using the new functions / non broadcast tutorial
+- 6/24 (Thursday)
+- 6/25 (Friday)

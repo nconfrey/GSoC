@@ -3,6 +3,7 @@
 import processing.net.*; 
 Client myClient; 
 int dataIn;
+String data[];
 
 //Location variables
 int xPos = width/2;
@@ -22,12 +23,19 @@ void draw() {
   ellipse(xPos, yPos, size, size);
   myClient.write(xPos + "," + yPos + "," + (int)size);
   
-  /*
   if (myClient.available() > 0) { 
     dataIn = myClient.read(); 
+    data = split(dataIn, ',');
+    if(data[0].equals("LOSE"))
+    {
+      println("You lose!");
+    }
+    else if(data[0].equals("BIG"))
+    {
+      println("You eat!");
+    }
   } 
-  background(dataIn); 
-  */
+  
 }
 
 void keyPressed()

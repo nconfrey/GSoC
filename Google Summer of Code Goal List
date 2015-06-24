@@ -19,7 +19,8 @@ Google Summer of Code Goal List
 	[x] Have server include a distinction between connection/disconnection events
 	[x] Build that distinction into fishy game
 	[x] Intersection detection (game logic)
-	[] Address individual clients when they have lost the game
+	[x] Address individual clients when they have lost the game
+	[x] Address the other individual clients and tell them to get bigger
 	[] Simple tutorial using the new functions / non broadcast tutorial
 - 6/24 (Thursday)
 - 6/25 (Friday)

@@ -28,15 +28,15 @@ void draw()
 
 void keyPressed()
 {
-  int clientNum = key;
+  int clientNum = key - 48; //get the number from the key code, where 1 is coded as 49
   int totalClients = myServer.getClientListLength();
-  println("Client requested is " + clientNum + " and total clients are " totalClients);
+  println("Client requested is " + clientNum + " and total clients are " + totalClients);
   
-  if(clientNum == totalClients) //Check to see if that client exists
+  if(clientNum <= totalClients) //Check to see if that client exists
   {
-    Client c = myServer.getClientAt(clientNum);
+    Client c = myServer.getClientAt(clientNum - 1); //getClientAt is zero indexed, so client 1 is 0 server-side
     //Send three random numbers that represent rgb color values
-    c.write(random(255) + "," + random(255) + "," + random(255));
+    c.write((int)random(255) + "," + (int)random(255) + "," + (int)random(255));
   }
   else
   {

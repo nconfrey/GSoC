@@ -5,12 +5,10 @@ Server myServer;
 int numClients = 0;
 String input;
 int data[];
-Client[] clientList;
 int coordList[][];
 
 void setup() {
   size(200, 200);
-  frameRate(30);
   coordList = new int[10][3]; //capping at 10 users for now 
   // Starts a myServer on port 5204
   myServer = new Server(this, 5204); 
@@ -23,7 +21,7 @@ int checkCollision(int index)
   {
     float betweenCenters = dist(coordList[index][0], coordList[index][1], coordList[i][0], coordList[i][1]);
     //println("between ball " + index + " and ball " + i + " the distance is " + betweenCenters);
-    int betweenEdges = betweenCenters - coordList[index][2]/2 - coordList[i][2]/2;
+    float betweenEdges = betweenCenters - coordList[index][2]/2 - coordList[i][2]/2;
     //println("distance between edges is " + yeah);
     if(betweenEdges < 0)
     {
@@ -44,20 +42,20 @@ void getBigger(Client client, int size)
 void youLose(Client client)
 {
   client.write("LOSE");
+  myServer.disconnect(client);
 }
 
 void draw() 
 {
-  //get most recent client list and number of clients
+  //get most recent number of clients
   numClients = myServer.getClientListLength();
-  //println(numClients);
-  clientList = myServer.getClientList();
+
   background(255);
   
   //update all our client coordinates
   for(int i = 0; i < numClients; i++)
   {
-    input = clientList[i].readString();
+    input = myServer.getClientAt(i).readString();
     if(input != null)
     {
       data = int(split(input, ','));
@@ -104,6 +102,4 @@ void serverEvent(Server someServer, Client someClient, String eventType) {
   println("Event Type is " + eventType);
   
   println("We have a new client: " + someClient.ip());
-  numClients++;
-  clientList[numClients] = someClient;
 }

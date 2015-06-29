@@ -20,9 +20,11 @@ int checkCollision(int index)
   for(int i = index+1; i < numClients; i++) //start at the ball after index
   {
     float betweenCenters = dist(coordList[index][0], coordList[index][1], coordList[i][0], coordList[i][1]);
-    //println("between ball " + index + " and ball " + i + " the distance is " + betweenCenters);
+    println("between ball " + index + " and ball " + i + " the distance is " + betweenCenters);
     float betweenEdges = betweenCenters - coordList[index][2]/2 - coordList[i][2]/2;
-    //println("distance between edges is " + yeah);
+    println("distance between edges is " + betweenEdges);
+    if(betweenEdges < (width * -1))
+      continue;
     if(betweenEdges < 0)
     {
       //Now we know there has been a collision. Return the collision partner
@@ -45,12 +47,10 @@ void youLose(Client client)
   myServer.disconnect(client);
 }
 
-void draw() 
+void updateClientCoordinates()
 {
   //get most recent number of clients
   numClients = myServer.getClientListLength();
-
-  background(255);
   
   //update all our client coordinates
   for(int i = 0; i < numClients; i++)
@@ -64,6 +64,15 @@ void draw()
       coordList[i][2] = data[2];
     }
   }
+}
+
+void draw() 
+{
+  background(255);
+  
+  //find out where all the fish are, and how many clients we have
+  updateClientCoordinates();
+  
   //check collisions with other "fish"
   for(int i = 0; i < numClients; i++)
   {
@@ -100,6 +109,14 @@ void draw()
 
 void serverEvent(Server someServer, Client someClient, String eventType) {
   println("Event Type is " + eventType);
-  
-  println("We have a new client: " + someClient.ip());
+  if(eventType.equals("connect"))
+  {
+    println("We have a new client: " + someClient.ip());
+  }
+  else //event type is disconnect
+  {
+    //Since a client disconnected, we need to refresh our coordinate list
+    coordList = new int[10][3];
+    //updateClientCoordinates();
+  }
 }

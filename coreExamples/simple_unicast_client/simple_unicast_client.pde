@@ -1,6 +1,12 @@
 import processing.net.*;
 
 Client myClient;
+String dataIn;
+int data[];
+
+int red = 255;
+int green = 255;
+int blue = 255;
 
 void setup()
 {
@@ -14,5 +20,12 @@ void setup()
 
 void draw()
 {
-  background(255);
+  if (myClient.available() > 0) { 
+      dataIn = myClient.readString(); 
+      data = int(split(dataIn, ','));
+      red = data[0];
+      green = data[1];
+      blue = data[2];
+  }
+  background(red,green,blue);
 }

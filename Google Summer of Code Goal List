@@ -23,9 +23,12 @@ Google Summer of Code Goal List
 	[x] Address the other individual clients and tell them to get bigger
 	[x] Simple tutorial using the new functions / non broadcast tutorial
 - 6/24 (Thursday)
-	[] Debug fish game a bit
-	[] Try to figure out where the screen flickers are coming from - is that the server library, or my sketch that I'm writing?
-	[] Read over pixels processing library
-	[] Read over the UDP processing library
-	[] Sketch out plan of attack for audio streaming
-- 6/25 (Friday)
+	[x] Debug fish game a bit
+	[x] Try to figure out where the screen flickers are coming from - is that the server library, or my sketch that I'm writing?
+	[x] Read over pixels processing library
+	[x] Read over the UDP processing library
+	[-] Sketch out plan of attack for audio streaming
+- 6/29 (Monday)
+	[] Respond to emails
+	[] Fix variable names in work so far
+	[] Play with ffmpeg

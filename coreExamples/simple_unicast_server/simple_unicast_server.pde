@@ -14,7 +14,7 @@ void draw()
 {
   background(255);
   
-  int numClients = myServer.getClientListLength();
+  int numClients = myServer.numClients();
   String users = "We have " + numClients + " users connected";
   fill(0);
   text(users, 0, 0, width, height);
@@ -29,12 +29,12 @@ void draw()
 void keyPressed()
 {
   int clientNum = key - 48; //get the number from the key code, where 1 is coded as 49
-  int totalClients = myServer.getClientListLength();
+  int totalClients = myServer.numClients();
   println("Client requested is " + clientNum + " and total clients are " + totalClients);
   
   if(clientNum <= totalClients) //Check to see if that client exists
   {
-    Client c = myServer.getClientAt(clientNum - 1); //getClientAt is zero indexed, so client 1 is 0 server-side
+    Client c = myServer.getClient(clientNum - 1); //getClientAt is zero indexed, so client 1 is 0 server-side
     //Send three random numbers that represent rgb color values
     c.write((int)random(255) + "," + (int)random(255) + "," + (int)random(255));
   }

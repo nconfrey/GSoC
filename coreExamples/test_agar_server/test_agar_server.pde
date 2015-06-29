@@ -50,12 +50,12 @@ void youLose(Client client)
 void updateClientCoordinates()
 {
   //get most recent number of clients
-  numClients = myServer.getClientListLength();
+  numClients = myServer.numClients();
   
   //update all our client coordinates
   for(int i = 0; i < numClients; i++)
   {
-    input = myServer.getClientAt(i).readString();
+    input = myServer.getClient(i).readString();
     if(input != null)
     {
       data = int(split(input, ','));
@@ -84,13 +84,13 @@ void draw()
       int size2 = coordList[collide][2];
       if(size1 > size2)
       {
-        getBigger(myServer.getClientAt(i), size2/2);
-        youLose(myServer.getClientAt(collide));
+        getBigger(myServer.getClient(i), size2/2);
+        youLose(myServer.getClient(collide));
       }
       else
       {
-        getBigger(myServer.getClientAt(collide), size1/2);
-        youLose(myServer.getClientAt(i));
+        getBigger(myServer.getClient(collide), size1/2);
+        youLose(myServer.getClient(i));
       }
     }
   }

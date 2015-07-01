@@ -27,77 +27,91 @@
 
 package template.library;
 
-
+import javax.imageio.*;
+import java.awt.image.*;
+import java.net.*;
+import java.io.*;
 import processing.core.*;
 
 /**
- * This is a template class and can be used to start a new processing library or tool.
- * Make sure you rename this class as well as the name of the example package 'template' 
- * to your own library or tool naming convention.
- * 
- * (the tag example followed by the name of an example included in folder 'examples' will
- * automatically include the example in the javadoc.)
- *
+ * This class should be set up and run first in a sketch, to send information to the receiver sketch.
+ * This is the server.
  * @example Hello 
  */
 
 public class VideoBroadcaster {
 	
+	int clientPort; //Port to send to
+	DatagramSocket ds;
+	InetAddress address;
+	
 	// myParent is a reference to the parent sketch
 	PApplet myParent;
-
-	int myVariable = 0;
 	
 	public final static String VERSION = "##library.prettyVersion##";
 	
 
 	/**
-	 * a Constructor, usually called in the setup() method in your sketch to
+	 * Usually called in the setup() method in your sketch to
 	 * initialize and start the library.
 	 * 
 	 * @example Hello
 	 * @param theParent
 	 */
-	public VideoBroadcaster(PApplet theParent) {
+	public VideoBroadcaster(PApplet theParent, int client, String addy) {
 		myParent = theParent;
+		clientPort = client;
+		
+		try { //Create the socket to send out on
+			ds = new DatagramSocket();
+			address = InetAddress.getByName(addy);
+		}
+		catch (SocketException e) {
+			e.printStackTrace();
+		}
+		catch (UnknownHostException uke){
+			System.out.println("Unknown Host IP Address!");
+			uke.printStackTrace();
+		}
+		
 		welcome();
 	}
-	
 	
 	private void welcome() {
 		System.out.println("##library.name## ##library.prettyVersion## by ##author##");
 	}
 	
-	
-	public String sayHello() {
-		return "hello library.";
-	}
-	/**
-	 * return the version of the library.
-	 * 
-	 * @return String
-	 */
-	public static String version() {
-		return VERSION;
-	}
-
-	/**
-	 * 
-	 * @param theA
-	 *          the width of test
-	 * @param theB
-	 *          the height of test
-	 */
-	public void setVariable(int theA, int theB) {
-		myVariable = theA + theB;
-	}
-
-	/**
-	 * 
-	 * @return int
-	 */
-	public int getVariable() {
-		return myVariable;
+	void broadcast(PImage img){
+		BufferedImage bi = new BufferedImage(img.width, img.height, BufferedImage.TYPE_INT_RGB);
+		
+		//Go through all pixels and pack them into the buffer
+		img.loadPixels();
+		bi.setRGB(0, 0, img.width, img.height, img.pixels, 0, img.width);
+		
+		//Changing the image into streams of bytes
+		ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+		BufferedOutputStream bos = new BufferedOutputStream(bStream);
+		
+		//transform our buffer into a jpg, put it into stream
+		try{
+			ImageIO.write(bi, "jpg", bos);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		//create the packets
+		byte[] packet = bStream.toByteArray();
+		DatagramPacket dPacket = new DatagramPacket(packet, packet.length, address, clientPort);
+		
+		//Send them out!
+		System.out.println("Sending a packet with bytes: " + packet.length);
+		try{
+			ds.send(dPacket);
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 }
 

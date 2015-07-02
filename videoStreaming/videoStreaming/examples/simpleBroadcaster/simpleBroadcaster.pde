@@ -21,5 +21,6 @@ void draw()
 void captureEvent( Capture c ) {
   c.read();
   // Whenever we get a new image, send it!
-  vb.broadcast(c);
+  //vb.broadcast(c);
+  vb.screenBroadcast();
 }

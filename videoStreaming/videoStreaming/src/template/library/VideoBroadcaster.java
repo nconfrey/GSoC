@@ -32,6 +32,7 @@ import java.awt.image.*;
 import java.net.*;
 import java.io.*;
 import processing.core.*;
+import processing.opengl.PGraphicsOpenGL;
 
 /**
  * This class should be set up and run first in a sketch, to send information to the receiver sketch.
@@ -47,6 +48,7 @@ public class VideoBroadcaster {
 	
 	// myParent is a reference to the parent sketch
 	PApplet myParent;
+	PGraphicsOpenGL pg;
 	
 	public final static String VERSION = "##library.prettyVersion##";
 	
@@ -61,6 +63,7 @@ public class VideoBroadcaster {
 	public VideoBroadcaster(PApplet theParent, int client, String addy) {
 		myParent = theParent;
 		clientPort = client;
+		//pg = (PGraphicsOpenGL)myParent.g;
 		
 		try { //Create the socket to send out on
 			ds = new DatagramSocket();
@@ -81,7 +84,7 @@ public class VideoBroadcaster {
 		System.out.println("##library.name## ##library.prettyVersion## by ##author##");
 	}
 	
-	void broadcast(PImage img){
+	public void broadcast(PImage img){
 		BufferedImage bi = new BufferedImage(img.width, img.height, BufferedImage.TYPE_INT_RGB);
 		
 		//Go through all pixels and pack them into the buffer
@@ -112,6 +115,11 @@ public class VideoBroadcaster {
 		catch (Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	public void screenBroadcast()
+	{
+		broadcast(myParent.get());
 	}
 }
 

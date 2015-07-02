@@ -27,24 +27,32 @@
 
 package template.library;
 
+import javax.imageio.*;
 
+import java.awt.image.*;
+import java.net.*;
+import java.io.*;
 import processing.core.*;
 
 /**
  * This class should be set up and run after the broadcaster, to receive information.
  * This is the client.
+ * 
+ * Thanks to: Syphon, Dan Shiffman's UDP
  * @example Hello 
  */
 
-public class VideoReceiver {
+public class VideoReceiver implements PConstants{
 	
 	// myParent is a reference to the parent sketch
 	PApplet myParent;
-
-	int myVariable = 0;
-	
 	public final static String VERSION = "##library.prettyVersion##";
 	
+	int port;
+	DatagramSocket ds;
+	byte[] buff = new byte[65536]; //Set to maximum size
+	
+	PImage img;
 
 	/**
 	 * Usually called in the setup() method in your sketch to
@@ -53,9 +61,23 @@ public class VideoReceiver {
 	 * @example Hello
 	 * @param theParent
 	 */
-	public VideoReceiver(PApplet theParent) {
+	
+	//TODO: have a better way of getting dimensions into here
+	//TODO: don't require the user to initiliaze the PImage.
+	//But why is createImage not working???
+	public VideoReceiver (PApplet theParent, int port, int w, int h, PImage img) {
 		myParent = theParent;
+		this.port = port;
+		this.img = img;
 		welcome();
+		
+		//img = createImage(w, h, RGB);
+		
+		try{
+			ds = new DatagramSocket(port);
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -63,9 +85,28 @@ public class VideoReceiver {
 		System.out.println("##library.name## ##library.prettyVersion## by ##author##");
 	}
 	
-	
-	public String sayHello() {
-		return "hello library.";
+	public PImage receive(){
+		DatagramPacket p = new DatagramPacket(buff, buff.length);
+		try {
+			ds.receive(p);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		byte[] data = p.getData();
+		
+		ByteArrayInputStream bais = new ByteArrayInputStream(data);
+		
+		img.loadPixels();
+		try {
+			BufferedImage bimg = ImageIO.read(bais);
+			bimg.getRGB(0, 0, img.width, img.height, img.pixels, 0, img.width);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		img.updatePixels();
+		
+		return img;
 	}
 }
 

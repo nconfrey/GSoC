@@ -30,7 +30,6 @@ void keyPressed()
 {
   int clientNum = key - 48; //get the number from the key code, where 1 is coded as 49
   int totalClients = myServer.numClients();
-  println("Client requested is " + clientNum + " and total clients are " + totalClients);
   
   if(clientNum <= totalClients) //Check to see if that client exists
   {

@@ -95,11 +95,6 @@ void draw()
     }
   }
   
-  //TODO: Problem! When the first user disconnects, we have junk data in the coordList.
-  //How to monitor client connections and then remove their data when they go...
-  //It seems like the problem is even more pervasive. The actual server source code doesn't know when a client disconnects
-  //Or actually, it seems like available uses it
-  
   //done receiving new information from clients, time to draw
   for(int i = 0; i < numClients; i++)
   {
@@ -107,16 +102,12 @@ void draw()
   }
 }
 
-void serverEvent(Server someServer, Client someClient, String eventType) {
-  println("Event Type is " + eventType);
-  if(eventType.equals("connect"))
-  {
-    println("We have a new client: " + someClient.ip());
-  }
-  else //event type is disconnect
-  {
-    //Since a client disconnected, we need to refresh our coordinate list
-    coordList = new int[10][3];
-    //updateClientCoordinates();
-  }
+void serverDisconnectEvent(Server s, Client c) {
+  //Since a client disconnected, we need to refresh our coordinate list
+  println("Client disconnected");
+  coordList = new int[10][3];
+}
+
+void serverEvent(Server someServer, Client someClient) {
+  println("We have a new client: " + someClient.ip());
 }

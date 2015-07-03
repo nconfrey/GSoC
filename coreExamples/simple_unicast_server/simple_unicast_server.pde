@@ -44,7 +44,12 @@ void keyPressed()
   }
 }
 
-void serverEvent(Server someServer, Client someClient, String eventType)
+void serverDisconnectEvent(Server s, Client c)
 {
-  
+ println("Client has disconnected"); 
+}
+
+void serverEvent(Server someServer, Client someClient)
+{
+  println("New client has connected!");
 }

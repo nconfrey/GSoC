@@ -16,11 +16,16 @@ void setup()
 void draw()
 {
   image(cam, 0, 0);
+  fill(random(255), random(255), 255);
+  ellipse(width/2, height/2, 25, 25);
 }
 
 void captureEvent( Capture c ) {
   c.read();
   // Whenever we get a new image, send it!
+  
+  //Can either send just the camera frame
   //vb.broadcast(c);
+  //Or we can send the entire processing screen!
   vb.screenBroadcast();
 }

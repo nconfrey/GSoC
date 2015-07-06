@@ -28,10 +28,12 @@
 package template.library;
 
 import javax.imageio.*;
+import org.gstreamer.*;
 import java.awt.image.*;
 import java.net.*;
 import java.io.*;
 import processing.core.*;
+import processing.video.*;
 import processing.opengl.PGraphicsOpenGL;
 
 /**
@@ -63,7 +65,8 @@ public class VideoBroadcaster {
 	public VideoBroadcaster(PApplet theParent, int client, String addy) {
 		myParent = theParent;
 		clientPort = client;
-		//pg = (PGraphicsOpenGL)myParent.g;
+		
+		Video.init();
 		
 		try { //Create the socket to send out on
 			ds = new DatagramSocket();
@@ -82,6 +85,17 @@ public class VideoBroadcaster {
 	
 	private void welcome() {
 		System.out.println("##library.name## ##library.prettyVersion## by ##author##");
+	}
+	
+	//Test out the gstreamer stuff
+	public void test(){
+		args = Gst.init("AudioPlayer", args);
+        PlayBin2 playbin = new PlayBin("AudioPlayer");
+        playbin.setInputFile(new File(args[0]));
+        playbin.setVideoSink(ElementFactory.make("fakesink", "videosink"));
+        playbin.setState(State.PLAYING);
+        Gst.main();
+        playbin.setState(State.NULL);
 	}
 	
 	public void broadcast(PImage img){

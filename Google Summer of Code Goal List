@@ -38,9 +38,14 @@ Google Summer of Code Goal List
 	[x] Delete the damn submodules and clean up git
 
 GStreamer for combined audio and video streams? Use built-in UDP sinks, or write my own...
+gsvideo.sourceforge.net
+gstreamer-java github
+gspipeline udp 
+libvlc
 
 
 TODO:
 [] Increase carrying capacity of datagrams (better spliting, more compression)
 [] Thread the server and receiver so it doesn't junk up the draw loop
 [] Audio streaming
+[] Delete unused plugins and files

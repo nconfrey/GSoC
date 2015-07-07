@@ -29,11 +29,12 @@ package template.library;
 
 import javax.imageio.*;
 import org.gstreamer.*;
+//import org.gstreamer.Buffer;
+import org.gstreamer.elements.*;
 import java.awt.image.*;
 import java.net.*;
 import java.io.*;
 import processing.core.*;
-import processing.video.*;
 import processing.opengl.PGraphicsOpenGL;
 
 /**
@@ -88,14 +89,20 @@ public class VideoBroadcaster {
 	}
 	
 	//Test out the gstreamer stuff
-	public void test(){
-		args = Gst.init("AudioPlayer", args);
-        PlayBin2 playbin = new PlayBin("AudioPlayer");
-        playbin.setInputFile(new File(args[0]));
+	public void test(String name){
+		
+		Movie m = new Movie(myParent, name);
+		m.loop();
+		
+		/*
+		arg = Gst.init("AudioPlayer", arg);
+        PlayBin2 playbin = new PlayBin2("AudioPlayer");
+        playbin.setInputFile(new File(arg[0]));
         playbin.setVideoSink(ElementFactory.make("fakesink", "videosink"));
         playbin.setState(State.PLAYING);
         Gst.main();
         playbin.setState(State.NULL);
+        */
 	}
 	
 	public void broadcast(PImage img){

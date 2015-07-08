@@ -66,7 +66,7 @@ public class Video implements PConstants {
   }  
   
   
-  static protected void init() {
+  static void init() {
     if (INSTANCES_COUNT == 0) {
       initImpl();
     }

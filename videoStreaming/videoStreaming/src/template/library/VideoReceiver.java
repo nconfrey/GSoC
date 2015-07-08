@@ -32,6 +32,9 @@ import javax.imageio.*;
 import java.awt.image.*;
 import java.net.*;
 import java.io.*;
+import org.gstreamer.*;
+import org.gstreamer.Buffer;
+import org.gstreamer.elements.*;
 import processing.core.*;
 
 /**
@@ -107,6 +110,12 @@ public class VideoReceiver implements PConstants{
 		img.updatePixels();
 		
 		return img;
+	}
+	
+	public void StreamReceive()
+	{
+		Video.init(); //link the GStreamer library into Processing
+		
 	}
 }
 

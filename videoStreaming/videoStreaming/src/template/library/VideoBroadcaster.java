@@ -29,7 +29,7 @@ package template.library;
 
 import javax.imageio.*;
 import org.gstreamer.*;
-//import org.gstreamer.Buffer;
+import org.gstreamer.Buffer;
 import org.gstreamer.elements.*;
 import java.awt.image.*;
 import java.net.*;
@@ -67,8 +67,6 @@ public class VideoBroadcaster {
 		myParent = theParent;
 		clientPort = client;
 		
-		Video.init();
-		
 		try { //Create the socket to send out on
 			ds = new DatagramSocket();
 			address = InetAddress.getByName(addy);
@@ -90,9 +88,18 @@ public class VideoBroadcaster {
 	
 	//Test out the gstreamer stuff
 	public void test(String name){
+		String[] arg = { "idk" }; //this is where the Gstreamer options would go
 		
-		Movie m = new Movie(myParent, name);
-		m.loop();
+		Video.init(); //Does all the linking of the GStreamer library files
+		arg = Gst.init(name,  arg); //Then get the framework ready
+		Pipeline pipe = new Pipeline(name);
+		Element src = ElementFactory.make("fakesrc", "Source");
+		Element sink = ElementFactory.make("fakesink", "Destination");
+		pipe.addMany(src, sink);
+		src.link(sink);
+		pipe.setState(State.PLAYING);
+		Gst.main(); //actually runs the thing
+		pipe.setState(State.NULL); //cleanup
 		
 		/*
 		arg = Gst.init("AudioPlayer", arg);

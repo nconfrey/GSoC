@@ -201,9 +201,9 @@ public class LibraryLoader {
     for (String fmt : nameFormats) {
       try {
         String s = String.format(fmt, name);
-        System.out.println("Trying to load library file " + s);
+        //System.out.println("Trying to load library file " + s);
         Object obj = Native.loadLibrary(s, clazz);
-        System.out.println("Loaded library " + s + " succesfully!");
+        //System.out.println("Loaded library " + s + " succesfully!");
         return obj;
       } catch (UnsatisfiedLinkError ex) {
         linkError = ex;

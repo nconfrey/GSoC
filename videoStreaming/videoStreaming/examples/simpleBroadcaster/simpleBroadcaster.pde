@@ -10,15 +10,15 @@ void setup()
   size(320, 240);
   vb = new VideoBroadcaster(this, 8008, "localhost");
   vb.test("C:\\Users\\Nick\\Downloads");
-  cam = new Capture(this, width, height, 30);
-  cam.start();
+  //cam = new Capture(this, width, height, 30);
+  //cam.start();
 }
 
 void draw()
 {
-  image(cam, 0, 0);
-  fill(random(255), random(255), 255);
-  ellipse(width/2, height/2, 25, 25);
+  //image(cam, 0, 0);
+  //fill(random(255), random(255), 255);
+  //ellipse(width/2, height/2, 25, 25);
 }
 
 void captureEvent( Capture c ) {

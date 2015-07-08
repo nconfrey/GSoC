@@ -9,8 +9,7 @@ void setup()
 {
   size(320, 240);
   vb = new VideoBroadcaster(this, 8008, "localhost");
-  String[] arg = { "idk" };
-  vb.test(arg);
+  vb.test("C:\\Users\\Nick\\Downloads");
   cam = new Capture(this, width, height, 30);
   cam.start();
 }

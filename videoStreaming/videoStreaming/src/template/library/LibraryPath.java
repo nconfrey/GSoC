@@ -43,7 +43,7 @@ class LibraryPath {
       if (Platform.isLinux()) {
         return "";
       } else {
-        n1 = path.indexOf("video.jar");
+        n1 = path.indexOf("videoStreaming.jar");
         if (Platform.isWindows()) {
           // In Windows, path string starts with "jar file/C:/..."
           // so the substring up to the first / is removed.

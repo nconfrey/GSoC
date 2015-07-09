@@ -9,7 +9,7 @@ void setup()
 {
   size(320, 240);
   vb = new VideoBroadcaster(this, 8008, "localhost");
-  vb.test("C:\\Users\\Nick\\Downloads");
+  vb.test("AudioThing", "C:\\Users\\Nick\\Music\\heldens.mp3");
   //cam = new Capture(this, width, height, 30);
   //cam.start();
 }

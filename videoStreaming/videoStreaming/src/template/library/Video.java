@@ -26,6 +26,7 @@ package template.library;
 import org.gstreamer.*;
 import processing.core.PApplet;
 import processing.core.PConstants;
+import template.library.*;
 
 import java.io.File;
 import java.nio.ByteOrder;

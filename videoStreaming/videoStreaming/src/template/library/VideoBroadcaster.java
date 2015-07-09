@@ -87,11 +87,21 @@ public class VideoBroadcaster {
 	}
 	
 	//Test out the gstreamer stuff
-	public void test(String name){
+	public void test(String name, String fName){
 		String[] arg = { "idk" }; //this is where the Gstreamer options would go
 		
 		Video.init(); //Does all the linking of the GStreamer library files
 		arg = Gst.init(name,  arg); //Then get the framework ready
+		
+		PlayBin2 playbin = new PlayBin2(name);
+		playbin.setInputFile(new File(fName));
+		playbin.setVideoSink(ElementFactory.make("fakesink", "videosink"));
+		playbin.setState(State.PLAYING);
+		Gst.main(); //do the actual playing
+		playbin.setState(State.NULL); //cleanup
+		
+		//Sample manual pipeline - tested working
+		/*
 		Pipeline pipe = new Pipeline(name);
 		Element src = ElementFactory.make("fakesrc", "Source");
 		Element sink = ElementFactory.make("fakesink", "Destination");
@@ -100,16 +110,7 @@ public class VideoBroadcaster {
 		pipe.setState(State.PLAYING);
 		Gst.main(); //actually runs the thing
 		pipe.setState(State.NULL); //cleanup
-		
-		/*
-		arg = Gst.init("AudioPlayer", arg);
-        PlayBin2 playbin = new PlayBin2("AudioPlayer");
-        playbin.setInputFile(new File(arg[0]));
-        playbin.setVideoSink(ElementFactory.make("fakesink", "videosink"));
-        playbin.setState(State.PLAYING);
-        Gst.main();
-        playbin.setState(State.NULL);
-        */
+		*/
 	}
 	
 	public void broadcast(PImage img){

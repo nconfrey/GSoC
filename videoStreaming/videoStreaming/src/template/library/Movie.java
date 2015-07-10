@@ -259,7 +259,7 @@ public class Movie extends PImage implements PConstants {
   public float duration() {
     float sec = playbin.queryDuration().toSeconds();
     float nanosec = playbin.queryDuration().getNanoSeconds();
-    return sec + Video.nanoSecToSecFrac(nanosec);
+    return sec + GStreamLink.nanoSecToSecFrac(nanosec);
   }
 
 
@@ -278,7 +278,7 @@ public class Movie extends PImage implements PConstants {
   public float time() {
     float sec = playbin.queryPosition().toSeconds();
     float nanosec = playbin.queryPosition().getNanoSeconds();
-    return sec + Video.nanoSecToSecFrac(nanosec);
+    return sec + GStreamLink.nanoSecToSecFrac(nanosec);
   }
 
 
@@ -310,7 +310,7 @@ public class Movie extends PImage implements PConstants {
     where = frame / fps;
 
     boolean res;
-    long pos = Video.secToNanoLong(where);
+    long pos = GStreamLink.secToNanoLong(where);
 
     res = playbin.seek(rate, Format.TIME, SeekFlags.FLUSH,
                        SeekType.SET, pos, SeekType.NONE, -1);
@@ -594,7 +594,7 @@ public class Movie extends PImage implements PConstants {
         IntBuffer buf = natBuffer.getByteBuffer().asIntBuffer();
         buf.rewind();
         buf.get(pixels);
-        Video.convertToARGB(pixels, width, height);        
+        GStreamLink.convertToARGB(pixels, width, height);        
       } else if (sinkGetMethod != null) {
         try {
           // sinkGetMethod will copy the latest buffer to the pixels array,
@@ -637,7 +637,7 @@ public class Movie extends PImage implements PConstants {
 
     File file;
 
-    Video.init();
+    GStreamLink.init();
 
     // first check to see if this can be read locally from a file.
     try {
@@ -740,7 +740,7 @@ public class Movie extends PImage implements PConstants {
 
 
   protected void initSink() {
-    if (bufferSink != null || (Video.useGLBufferSink && parent.g.isGL())) {
+    if (bufferSink != null || (GStreamLink.useGLBufferSink && parent.g.isGL())) {
       useBufferSink = true;
 
       if (bufferSink != null) {
@@ -773,7 +773,7 @@ public class Movie extends PImage implements PConstants {
         });
 
       // Setting direct buffer passing in the video sink.
-      rgbSink.setPassDirectBuffer(Video.passDirectBuffer);
+      rgbSink.setPassDirectBuffer(GStreamLink.passDirectBuffer);
       playbin.setVideoSink(rgbSink);
       // The setVideoSink() method sets the videoSink as a property of the
       // PlayBin, which increments the refcount of the videoSink element.

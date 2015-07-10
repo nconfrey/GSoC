@@ -5,11 +5,18 @@ import processing.video.*;
 Capture cam;
 VideoBroadcaster vb;
 
+String wav = "C:\\Users\\Nick\\Music\\Youtubles\\RoadTrip\\Lift.wav";
+String mp3 = "C:\\Users\\Nick\\Music\\1997.mp3";
+
 void setup()
 {
   size(320, 240);
   vb = new VideoBroadcaster(this, 8008, "localhost");
-  vb.test("AudioThing", "C:\\Users\\Nick\\Music\\heldens.mp3");
+  //vb.test("test", "dontcare", "filesrc location=C:\\Users\\Nick\\Music\\Youtubles\\RoadTrip\\Lift.wav ! autoaudiosink");
+  vb.test("test", "dontcare");
+  //vb.testPipeline("test", "dontcare", "videotestsrc ! udpsink host=127.0.0.1 port=5000");
+  //vb.testPipeline("test", "dk", "udpsrc port=5000 ! autovideosink");
+  //vb.test("AudioThing", "C:\\Users\\Nick\\Music\\1997.mp3");
   //cam = new Capture(this, width, height, 30);
   //cam.start();
 }

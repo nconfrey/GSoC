@@ -74,7 +74,8 @@ String message = null;
             */
             String value = new String(data);
             sendUser("FileUpload", userList);
-            sendUser(value, userList);
+            //sendUser(value, userList);
+            
             sendUser("Done", userList);
             //}
         }

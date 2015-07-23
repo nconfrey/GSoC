@@ -36,6 +36,9 @@ import java.net.*;
 import java.io.*;
 import processing.core.*;
 import processing.opengl.PGraphicsOpenGL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 
 /**
  * This class should be set up and run first in a sketch, to send information to the receiver sketch.
@@ -95,7 +98,7 @@ public class VideoBroadcaster {
 		
 		//Pipeline pipe = Pipeline.launch("filesrc location=" + fName + " ! mad ! audioconvert ! audioresample ! osssink");
 		Pipeline pipe = Pipeline.launch("videotestsrc ! udpsink name=udp");
-		pipe.getElementByName("udp").set("host", "127.0.0.1");
+		pipe.getElementByName("udp").set("host", "192.168.8.255");
 		pipe.getElementByName("udp").set("port", "8888");
 		pipe.play();
 		
@@ -130,11 +133,12 @@ public class VideoBroadcaster {
 		String[] arg = { "idk" }; //this is where the Gstreamer options would go
 		
 		GStreamLink.init(); //Does all the linking of the GStreamer library files
+		
 		arg = Gst.init("Test Pipe",  arg); //Then get the framework ready
 		
 		Pipeline pipe = Pipeline.launch(piper);
 		pipe.play();
-		Gst.main();
+		//Gst.main();
 	}
 	
 	public void testAudio(String name, String fName)
@@ -151,6 +155,38 @@ public class VideoBroadcaster {
 		playbin.setState(State.PLAYING);
 		Gst.main(); //do the actual playing
 		playbin.setState(State.NULL); //cleanup
+	}
+	
+	public void testStreamCast()
+	{
+		String ip = "127.0.0.1";
+		GStreamLink.init();
+		Gst.init("Server", new String[0]);
+		Pipeline pipe = new Pipeline();
+		Element vid = ElementFactory.make("videotestsrc", "test");
+		Element udpSink = ElementFactory.make("udpsink", "udpsink0");
+		udpSink.set("host", ip);
+		udpSink.set("port", 5000);
+		pipe.addMany(vid, udpSink);
+		Element.linkMany(vid, udpSink);
+		pipe.play();
+	}
+	
+	public void testStreamRecv()
+	{
+		GStreamLink.init();
+		
+		Pipeline pipeline0 = new Pipeline("pipeline0");
+		pipeline0.setState(State.NULL); 
+        pipeline0.setState(State.PAUSED);
+        
+		BaseSrc udpsrc0 = (BaseSrc) ElementFactory.make("udpsrc", "udpsrc0"); 
+		udpsrc0.set("port", 5000);
+		Element vidSink = ElementFactory.make("autovideosink", "vidSink");
+		
+		pipeline0.addMany(udpsrc0, vidSink);
+		Element.linkMany(udpsrc0, vidSink);
+		pipeline0.setState(State.PLAYING);
 	}
 	
 	public void broadcast(PImage img){
@@ -178,6 +214,32 @@ public class VideoBroadcaster {
 		
 		//Send them out!
 		System.out.println("Sending a packet with bytes: " + packet.length);
+		try{
+			ds.send(dPacket);
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	//TODO: COMPRESSION!
+	public void broadcastSound(String fName)
+	{
+		Path path = Paths.get(fName);
+		byte[] data;
+		DatagramPacket dPacket;
+		try
+		{
+			data = Files.readAllBytes(path);
+			dPacket = new DatagramPacket(data, data.length, address, clientPort);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return;
+		}
+		//Send them out!
+		System.out.println("Sending a packet with bytes: " + data.length);
 		try{
 			ds.send(dPacket);
 		}

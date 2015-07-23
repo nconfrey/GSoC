@@ -37,12 +37,22 @@ Google Summer of Code Goal List
 	[x] Set up development enviroment
 	[x] Delete the damn submodules and clean up git
 
+[] Compile GStreamer C Code
+[] Run GStreamer UDP sink in C
+[] Transmit UDP audio
+[] Transmit UDP video
+[] Link in Java JNI with wrappers
+[] Call gst-launch from java
+[] Transmit UDP audio/video in Java
+[] Link in with processing
+
 GStreamer for combined audio and video streams? Use built-in UDP sinks, or write my own...
 gsvideo.sourceforge.net
 gstreamer-java github
 gspipeline udp 
 libvlc
 
+gcc -I "C:\gstreamer-sdk\0.10\x86_64\include\gstreamer-0.10\gst" -L C:\gstreamer-sdk\0.10\x86_64\bin basic-tutorial-1.c
 
 TODO:
 [] Increase carrying capacity of datagrams (better spliting, more compression)
@@ -51,7 +61,22 @@ TODO:
 [] Delete unused plugins and files
 [] Movie type is ambiguous when included in the broadcaster package
 
+java -cp jna.jar:gstreamer-java.jar   org.gstreamer.example.PipelineLauncher "videotestsrc ! autovideosink"
+
+TESTED WORKING AUDIO TRANSMISSION:
+gst-launch-1.0 audiotestsrc freq=1000 ! mulawenc ! rtppcmupay ! udpsink host=127.0.0.1 port=5555
+gst-launch-1.0 udpsrc port=5555 caps="application/x-rtp" ! queue ! rtppcmudepay ! mulawdec ! audioconvert ! autoaudiosink
+
+TESTED WORKING VIDEO TRANSMISSION:
+gst-launch-1.0 videotestsrc ! jpegenc ! rtpjpegpay ! udpsink host=127.0.0.1 port=5200
+gst-launch-1.0 udpsrc port=5200 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegdec ! autovideosink
+
+C:\Users\Nick\Videos\Bad.mpg
+
+gst-launch-1.0 filesrc location=C:\Users\Nick\Videos\Bad.mpg ! dvddemux name=demuxer demuxer. ! queue ! mpeg2dec ! sdlvideosink demuxer. ! queue ! mad ! audioconvert ! audioresample ! osssink 
+
 DEMOS and TUTORIAL IDEAS:
 
 Radio station
 Skype
+Live video commenting

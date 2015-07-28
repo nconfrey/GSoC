@@ -11,8 +11,8 @@ INCLUDE0= -I "C:\gstreamer\1.0\x86_64\include\gstreamer-1.0" -I"C:\gstreamer\1.0
 first: basic-tutorial-1.c
 	gcc -o tut1 $(INCLUDE) $(LIBPATH) $(LIBS) basic-tutorial-1.c
 
-second: basic-tutorial-1.c
-	gcc -o tut2 $(LIBPATH0) $(LIBS0) $(INCLUDE0) basic-tutorial-1.c
+server: basic-tutorial-1.c
+	gcc -o server $(LIBPATH0) $(LIBS0) $(INCLUDE0) basic-tutorial-1.c
 
 client: client.c
 	gcc -o client $(LIBPATH0) $(LIBS0) $(INCLUDE0) client.c

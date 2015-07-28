@@ -13,9 +13,12 @@ int main(int argc, char *argv[]) {
   gst_init (&argc, &argv);
 
   /* Build the pipeline */
-  //pipeline = gst_parse_launch ("playbin uri=http://docs.gstreamer.com/media/sintel_trailer-480p.webm", &e);
-  pipeline = gst_parse_launch("audiotestsrc freq=1000 ! mulawenc ! rtppcmupay ! udpsink host=127.0.0.1 port=5555", &e);
-  //pipeline = gst_parse_launch("audiotestsrc ! autoaudiosink", NULL);
+  //TESTED WORKING AUDIO TRANSMISSION
+  //pipeline = gst_parse_launch("audiotestsrc freq=1000 ! mulawenc ! rtppcmupay ! udpsink host=127.0.0.1 port=5555", &e);
+  
+  //TESTING VIDEO TRANSMISSION
+  pipeline = gst_parse_launch("videotestsrc ! jpegenc ! rtpjpegpay ! udpsink host=127.0.0.1 port=5200", &e);
+
   if(e != NULL)
   {
     printf(e->message);

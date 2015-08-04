@@ -1,8 +1,14 @@
 CC=gcc
 
 JAVAHOME= "C:\Java"
-FLAGS= -Wl,-add-stdcall-alias -D __int64="long long" -mno-cygwin
+FLAGS= -Wl,-add-stdcall-alias -D __int64="long long"
 INCLUDE= -I"C:\Java\include" -I"C:\Java\include\win32"
 
-hello: HelloJNI.c
-	gcc-3 $(FLAGS) $(INCLUDE) -shared -o hello.dll HelloJNI.c
+INCLUDELIN= -I"/usr/lib/jvm/java-7-openjdk-amd64/include" -I"/usr/lib/jvm/java-7-openjdk-amd64/include/linux"
+FLAGSLIN= -shared -fpic
+
+helloWin: HelloJNI.c
+	gcc $(FLAGS) $(INCLUDE) -shared -o hello.dll HelloJNI.c
+
+helloLin: HelloJNI.c
+	gcc $(FLAGSLIN) $(INCLUDELIN) -o libhello.so HelloJNI.c

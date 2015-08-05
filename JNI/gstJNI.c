@@ -38,3 +38,8 @@ JNIEXPORT jint JNICALL Java_gstJNI_pipelineLaunch(JNIEnv *env, jobject thisObj, 
 
     return 0;
 }
+
+int main()
+{
+    return 0;
+}

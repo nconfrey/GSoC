@@ -72,6 +72,7 @@ gst-launch-1.0 audiotestsrc freq=1000 ! mulawenc ! rtppcmupay ! udpsink host=127
 gst-launch-1.0 udpsrc port=5555 caps="application/x-rtp" ! queue ! rtppcmudepay ! mulawdec ! audioconvert ! autoaudiosink
 
 TESTED WORKING VIDEO TRANSMISSION:
+
 gst-launch-1.0 videotestsrc ! jpegenc ! rtpjpegpay ! udpsink host=127.0.0.1 port=5200
 gst-launch-1.0 udpsrc port=5200 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegdec ! autovideosink
 
@@ -84,3 +85,18 @@ DEMOS and TUTORIAL IDEAS:
 Radio station
 Skype
 Live video commenting
+
+LEARNING NEW LINUX COMMANDS!
+
+Check swap space:
+grep SwapTotal /proc/meminfo
+
+Show where a package is installed: whereis gstreamer-1.0
+
+I LOVE APT-GET
+sudo apt-get install libgstreamer1.0-dev
+
+To get a list of packages installed locally do this in your terminal:
+dpkg --get-selections | grep -v deinstall
+
+Usually in Ubuntu header files for some package (say something) are provided by the corresponding dev package (say something-dev or libsomething-dev). Unless the manual is Ubuntu specific, it will probably just say "Install the development files" or something like that 

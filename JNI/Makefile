@@ -15,4 +15,4 @@ helloLin: HelloJNI.c
 	gcc $(LIN) -o libhello.so HelloJNI.c
 
 gstLin: gstJNI.c
-	gcc $(LIN) -o libgstJNI.so gstJNI.c
+	libtool --mode=link gcc `pkg-config --cflags --libs gstreamer-1.0` $(LIN) -z noexecstack -c -o libgstJNI.so gstJNI.c

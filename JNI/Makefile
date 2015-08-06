@@ -5,7 +5,7 @@ FLAGS= -Wl,-add-stdcall-alias -D __int64="long long"
 INCLUDE= -I"C:\Java\include" -I"C:\Java\include\win32"
 
 INCLUDELIN= -I"/usr/lib/jvm/java-7-openjdk-amd64/include" -I"/usr/lib/jvm/java-7-openjdk-amd64/include/linux"
-FLAGSLIN= -shared -fpic
+FLAGSLIN= -shared -fPIC
 LIN= $(INCLUDELIN) $(FLAGSLIN)
 
 helloWin: HelloJNI.c

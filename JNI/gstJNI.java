@@ -1,8 +1,8 @@
 public class gstJNI {
 	static {
+		System.loadLibrary("gstreamer-1.0");
 		System.loadLibrary("gstJNI"); //loading c wrapper 'library'
 		//loading libgstJNI.so Unixes, gstJNI.dll on Windows
-		System.loadLibrary("gstreamer-1.0");
 	}
 
 	private native int pipelineLaunch(String msg);

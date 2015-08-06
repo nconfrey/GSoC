@@ -99,4 +99,8 @@ sudo apt-get install libgstreamer1.0-dev
 To get a list of packages installed locally do this in your terminal:
 dpkg --get-selections | grep -v deinstall
 
-Usually in Ubuntu header files for some package (say something) are provided by the corresponding dev package (say something-dev or libsomething-dev). Unless the manual is Ubuntu specific, it will probably just say "Install the development files" or something like that 
+Usually in Ubuntu header files for some package (say something) are provided by the corresponding dev package (say something-dev or libsomething-dev). Unless the manual is Ubuntu specific, it will probably just say "Install the development files" or something like that
+
+If there's a bunch of shit like "relocation 0 has invalid symbol index 11" it just doesn't have a main function
+
+java -Djava.library.path=. gstJNI "videotestsrc ! autovideosink"

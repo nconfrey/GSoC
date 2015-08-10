@@ -36,6 +36,11 @@ Google Summer of Code Goal List
 	[x] Get the damn thing to compile
 	[x] Set up development enviroment
 	[x] Delete the damn submodules and clean up git
+- 8/10 (Monday)
+	[] Get Email client going
+	[] Summerize problem for Andres, send email
+	[] Weekly update Dan
+	[] Read over Andres code to fix linking error
 
 [] Compile GStreamer C Code
 [] Run GStreamer UDP sink in C
@@ -104,3 +109,8 @@ Usually in Ubuntu header files for some package (say something) are provided by 
 If there's a bunch of shit like "relocation 0 has invalid symbol index 11" it just doesn't have a main function
 
 java -Djava.library.path=. gstJNI "videotestsrc ! autovideosink"
+
+java -Djava.library.path=/usr/lib/x86_64-linux-gnu;/Desktop/GSoC/GSoC/JNI gstJNI "videotestsrc ! autovideosink"
+
+Make macros:
+The macro @  evaluates to the name of the current target.

@@ -37,7 +37,7 @@ Google Summer of Code Goal List
 	[x] Set up development enviroment
 	[x] Delete the damn submodules and clean up git
 - 8/10 (Monday)
-	[] Get Email client going
+	[-] Get Email client going
 	[] Summerize problem for Andres, send email
 	[] Weekly update Dan
 	[] Read over Andres code to fix linking error

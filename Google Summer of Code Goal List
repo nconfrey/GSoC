@@ -114,3 +114,6 @@ java -Djava.library.path=/usr/lib/x86_64-linux-gnu;/Desktop/GSoC/GSoC/JNI gstJNI
 
 Make macros:
 The macro @  evaluates to the name of the current target.
+
+SET ENVIROMENT VARIABLES LINUX:
+export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu

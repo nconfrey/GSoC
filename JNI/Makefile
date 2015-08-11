@@ -8,5 +8,10 @@ LIN= $(INCLUDELIN) $(CFLAGSLIN)
 gstLin: gstJNI.c
 	libtool --mode=link gcc `pkg-config --cflags --libs gstreamer-1.0` $(LIN) -o libgstJNI.so gstJNI.c
 
+compile:
+	javac gstJNI.java
+	javah gstJNI
+	make gstLin
+
 clean:
 	rm gstJNI.h libgstJNI.so gstJNI.class

@@ -54,9 +54,17 @@ libvlc
 
 gcc -I "C:\gstreamer-sdk\0.10\x86_64\include\gstreamer-0.10" -I"C:\gstreamer-sdk\0.10\x86_64\include\glib-2.0" -I "C:\gstreamer-sdk\0.10\x86_64\lib\glib-2.0\include" -I"C:\gstreamer-sdk\0.10\x86_64\include\libxml2" -L "C:\gstreamer-sdk\0.10\x86_64\bin" -l "libgstreamer-0.10-0" basic-tutorial-1.c
 
+building the build path
+fatal error: glib.h:
+ fatal error: glibconfig.h:
+ fatal error: gst/gstconfig.h:
+
 OLD PATH: revert here if after 7/23/15 2:38 pm things go tits up
 
 C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\iis express\PHP\v5.4;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x86;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x64;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Diskeeper Corporation\ExpressCache\;C:\Program Files (x86)\Windows Live\Shared;C:\Users\Nick\AppData\Local\Android\android-sdk\tools;C:\Users\N;C:\Program Files\MySQL\MySQL Server 5.1\bin;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0\;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\Muse;C:\cygwin64\home\Nick\libraries\apache-ant-1.9.5\bin;C:\gstreamer-sdk\0.10\x86_64\bin;C:\cygwin64\home\Nick\Processing GSoC\GSoC\videoStreaming\videoStreaming\lib;C:\cygwin64\home\Nick\Processing GSoC\GSoC\videoStreaming\videoStreaming\lib\windows64;C:\gstreamer\1.0\x86\bin;C:\Java\bin
+
+In an act of desperation at 8;45 7/28
+changed GSTREAMER_SDK_ROOT_X86_64 from C:\gstreamer\1.0\x86_64\ to 
 
 TODO:
 [] Increase carrying capacity of datagrams (better spliting, more compression)
@@ -78,6 +86,16 @@ gst-launch-1.0 udpsrc port=5200 ! application/x-rtp,encoding-name=JPEG,payload=2
 C:\Users\Nick\Videos\Bad.mpg
 
 gst-launch-1.0 filesrc location=C:\Users\Nick\Videos\Bad.mpg ! dvddemux name=demuxer demuxer. ! queue ! mpeg2dec ! sdlvideosink demuxer. ! queue ! mad ! audioconvert ! audioresample ! osssink 
+
+###PROBLEM FINDING v412src
+gst-launch-1.0 v412src ! video/x-raw-yuv,width=128,height=96,format='(fourcc)'UYVY ! ffmpegcolorspace ! ffenc_h263 ! video/x-h263 ! rtph263ppay pt=96 ! udpsink host=192.168.1.1 port=5000 sync=false
+
+###PROBLEM FINDING alsasrc
+gst-launch-1.0 -e alsasrc ! audio/x-raw-int,rate=8000 ! queue ! dmaienc_aac bitrate=56000 ! rtpmp4apay ! udpsink host=127.0.0.1 port=8888
+
+gst-launch-1.0 dshowvideosrc ! video/x-raw,width=640,height=480 ! x264enc ! h264parse ! rtph264pay ! udpsink host=127.0.0.1 port=5000
+
+v4l2src always-copy=false input-src=composite ! "video/x-raw-yuv, width=720, height=480, format=(fourcc)NV12, pitch=736" ! dmaiaccel ! dmaienc_h264 ratecontrol=4 encodingpreset=2 ! queue ! rtph264pay ! udpsink host=68.195.194.250 port=$VIDEO_PORT -v
 
 DEMOS and TUTORIAL IDEAS:
 

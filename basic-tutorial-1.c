@@ -19,6 +19,8 @@ int main(int argc, char *argv[]) {
   //TESTING VIDEO TRANSMISSION
   pipeline = gst_parse_launch("videotestsrc ! jpegenc ! rtpjpegpay ! udpsink host=127.0.0.1 port=5200", &e);
 
+  //pipeline = gst_parse_launch("videotestsrc ! autovideosink", &e);
+
   if(e != NULL)
   {
     printf(e->message);

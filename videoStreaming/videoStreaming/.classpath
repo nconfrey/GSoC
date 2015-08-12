@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" output="bin" path="src"/>
+	<classpathentry kind="src" path="native"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/nc/Desktop/GSoC/GSoC/videoStreaming/videoStreaming/lib/core.jar"/>
 	<classpathentry kind="lib" path="lib/gstreamer-java.jar"/>

@@ -1,7 +1,7 @@
 public class gstJNI {
 	static {
-		System.load("/usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so");
-		System.load("/Desktop/GSoC/GSoC/JNI/libgstJNI.so"); //loading c wrapper 'library'
+		//System.load("/usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so");
+		System.loadLibrary("gstJNI"); //loading c wrapper 'library'
 		//loading libgstJNI.so Unixes, gstJNI.dll on Windows
 	}
 

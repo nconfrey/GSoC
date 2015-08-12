@@ -67,6 +67,7 @@ public class GStreamLink implements PConstants {
   }  
   
   
+  
   static void init() {
     if (INSTANCES_COUNT == 0) {
       initImpl();

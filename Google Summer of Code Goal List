@@ -135,3 +135,21 @@ The macro @  evaluates to the name of the current target.
 
 SET ENVIROMENT VARIABLES LINUX:
 export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu
+
+nc@nc-700Z3C-700Z5C:~/Desktop/GSoC/GSoC/JNI$ java -Djava.library.path=.:/usr/lib/x86_64-linux-gnu gstJNI "videotestsrc ! autovideosink"
+Exception in thread "main" java.lang.UnsatisfiedLinkError: /home/nc/Desktop/GSoC/GSoC/JNI/libgstJNI.so: /home/nc/Desktop/GSoC/GSoC/JNI/libgstJNI.so: cannot dynamically load executable
+	at java.lang.ClassLoader$NativeLibrary.load(Native Method)
+	at java.lang.ClassLoader.loadLibrary1(ClassLoader.java:1965)
+	at java.lang.ClassLoader.loadLibrary0(ClassLoader.java:1890)
+	at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1880)
+	at java.lang.Runtime.loadLibrary0(Runtime.java:849)
+	at java.lang.System.loadLibrary(System.java:1088)
+	at gstJNI.<clinit>(gstJNI.java:4)
+
+WORKING PROCESS FOR ECLIPSE SIMPLE_PROCESSING
+
+Did you change the java files? ant run in eclipse, copy entire folder to processing library folder
+
+Did you change the C files? make on the command line, drag the new lib.so from the src to the library/linux64 folder, and then to processing folder
+
+Did you make a new C function? rm iface.h, make iface.h, make, run ant

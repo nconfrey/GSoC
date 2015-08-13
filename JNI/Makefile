@@ -7,7 +7,7 @@ LDFLAGS= -shared
 LIN= $(INCLUDELIN) $(CFLAGSLIN)
 
 gstLin: gstJNI.c
-	libtool --mode=link gcc `pkg-config --cflags --libs gstreamer-1.0` $(LIN) -o libgstJNI.so gstJNI.c
+	libtool --mode=link gcc `pkg-config --cflags --libs gstreamer-1.0` -z defs $(LIN) -o libgstJNI.so gstJNI.c
 
 compile:
 	javac gstJNI.java

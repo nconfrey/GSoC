@@ -93,8 +93,8 @@ C:\Users\Nick\Videos\Bad.mpg
 
 gst-launch-1.0 filesrc location=C:\Users\Nick\Videos\Bad.mpg ! dvddemux name=demuxer demuxer. ! queue ! mpeg2dec ! sdlvideosink demuxer. ! queue ! mad ! audioconvert ! audioresample ! osssink 
 
-###PROBLEM FINDING v412src
-gst-launch-1.0 v412src ! video/x-raw-yuv,width=128,height=96,format='(fourcc)'UYVY ! ffmpegcolorspace ! ffenc_h263 ! video/x-h263 ! rtph263ppay pt=96 ! udpsink host=192.168.1.1 port=5000 sync=false
+###PROBLEM FINDING v4l2src
+gst-launch-1.0 v4l2src ! video/x-raw-yuv,width=128,height=96,format='(fourcc)'UYVY ! ffmpegcolorspace ! ffenc_h263 ! video/x-h263 ! rtph263ppay pt=96 ! udpsink host=127.0.0.1 port=5000 sync=false
 
 ###PROBLEM FINDING alsasrc
 gst-launch-1.0 -e alsasrc ! audio/x-raw-int,rate=8000 ! queue ! dmaienc_aac bitrate=56000 ! rtpmp4apay ! udpsink host=127.0.0.1 port=8888
@@ -153,3 +153,15 @@ Did you change the java files? ant run in eclipse, copy entire folder to process
 Did you change the C files? make on the command line, drag the new lib.so from the src to the library/linux64 folder, and then to processing folder
 
 Did you make a new C function? rm iface.h, make iface.h, make, run ant
+
+#######And now, trying to stream audio over network (at least with microphone or sound or something over than just tone)
+
+gst-launch-1.0 autoaudiosrc ! audio/x-raw-int, endianness="(int)1234", signed="(boolean)true", width="(int)16", depth="(int)16", rate="(int)22000", channels="(int)1" ! audioconvert ! vorbisenc ! oggmux max-delay=50 max-page-delay=50 ! tcpclientsink host=localhost port=3000
+
+#
+gst-launch-1.0 v4l2src ! video/x-raw,width=128,height=96,format=UYVY ! videoconvert  ! video/x-h263 ! rtph263ppay pt=96 ! udpsink host=127.0.0.1 port=5000
+
+gst-launch filesrc location=/home/nc/groove.mp3 ! mad  !  audioconvert  ! audioresample ! osssink
+
+THIS WORKS
+gst-launch-1.0 filesrc location=/home/nc/groove.mp3 ! decodebin ! pulsesink

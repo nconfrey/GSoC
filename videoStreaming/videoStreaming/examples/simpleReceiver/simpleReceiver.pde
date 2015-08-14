@@ -8,7 +8,6 @@ void setup()
   size(320, 240);
   img = createImage(320, 240, RGB);
   vc = new VideoReceiver(this, 8008, 320, 240, img);
-  //vc.StreamReceive("https://youtu.be/mN0TvP2ZgIg");
 }
 
 void draw()

@@ -42,14 +42,14 @@ Google Summer of Code Goal List
 	[] Weekly update Dan
 	[] Read over Andres code to fix linking error
 
-[] Compile GStreamer C Code
-[] Run GStreamer UDP sink in C
-[] Transmit UDP audio
+[x] Compile GStreamer C Code
+[x] Run GStreamer UDP sink in C
+[x] Transmit UDP audio
 [] Transmit UDP video
-[] Link in Java JNI with wrappers
-[] Call gst-launch from java
-[] Transmit UDP audio/video in Java
-[] Link in with processing
+[x] Link in Java JNI with wrappers
+[x] Call gst-launch from java
+[x] Transmit UDP audio/video in Java
+[x] Link in with processing
 
 GStreamer for combined audio and video streams? Use built-in UDP sinks, or write my own...
 gsvideo.sourceforge.net
@@ -80,9 +80,6 @@ TODO:
 
 java -cp jna.jar:gstreamer-java.jar   org.gstreamer.example.PipelineLauncher "videotestsrc ! autovideosink"
 
-TESTED WORKING AUDIO TRANSMISSION:
-gst-launch-1.0 audiotestsrc freq=1000 ! mulawenc ! rtppcmupay ! udpsink host=127.0.0.1 port=5555
-gst-launch-1.0 udpsrc port=5555 caps="application/x-rtp" ! queue ! rtppcmudepay ! mulawdec ! audioconvert ! autoaudiosink
 
 TESTED WORKING VIDEO TRANSMISSION:
 
@@ -165,3 +162,18 @@ gst-launch filesrc location=/home/nc/groove.mp3 ! mad  !  audioconvert  ! audior
 
 THIS WORKS
 gst-launch-1.0 filesrc location=/home/nc/groove.mp3 ! decodebin ! pulsesink
+
+TESTED WORKING AUDIO TRANSMISSION:
+gst-launch-1.0 audiotestsrc freq=1000 ! mulawenc ! rtppcmupay ! udpsink host=127.0.0.1 port=5555
+gst-launch-1.0 udpsrc port=5555 caps="application/x-rtp" ! queue ! rtppcmudepay ! mulawdec ! audioconvert ! autoaudiosink
+
+gst-launch-1.0 filesrc location=/home/nc/groove.mp3 ! decodebin ! mulawenc ! rtppcmupay ! udpsink host=127.0.0.1 port=5555
+gst-launch-1.0 udpsrc port=5555 caps="application/x-rtp" ! queue ! rtppcmudepay ! mulawdec ! decodebin ! autoaudiosink
+
+gst-launch-1.0 v4l2src ! 'video/x-raw, width=640, height=480, framerate=30/1' ! videoconvert ! x264enc pass=qual quantizer=20 tune=zerolatency ! rtph264pay ! udpsink host=127.0.0.1 port=5555
+
+gst-launch-1.0 udpsrc port=5555 ! "application/x-rtp, payload=127" ! rtph264depay ! avdec_h264 ! videoconvert  ! xvimagesink sync=false
+
+HOLY FUCKING SHIT THIS WORKSSSSS
+gst-launch-1.0 -v filesrc location=/home/nc/groove.mp3 ! decodebin ! audioconvert ! rtpL16pay ! udpsink port=6969 host=127.0.0.1
+gst-launch-1.0 -v udpsrc port=6969 caps="application/x-rtp, media=(string)audio, format=(string)S32LE, layout=(string)interleaved, clock-rate=(int)44100, channels=(int)2, payload=(int)0" ! rtpL16depay ! playsink

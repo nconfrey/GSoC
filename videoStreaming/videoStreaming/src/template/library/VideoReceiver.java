@@ -28,9 +28,6 @@
 package template.library;
 
 import javax.imageio.*;
-import org.gstreamer.*;
-import org.gstreamer.Buffer;
-import org.gstreamer.elements.*;
 import java.awt.image.*;
 import java.net.*;
 import java.io.*;
@@ -110,61 +107,6 @@ public class VideoReceiver implements PConstants{
 		img.updatePixels();
 		
 		return img;
-	}
-	
-	//A robust network safe method to stream from an internet source
-	public void StreamReceive(String fName)
-	{
-		Pipeline pipe = new Pipeline("test");
-		Bus bus;
-		PlayBin2 playbin;
-		StateChangeReturn ret;
-		String[] arg = { "idk" }; //this is where the Gstreamer options would go
-		
-		GStreamLink.init(); //link the GStreamer library into Processing
-		System.out.println("Library linked");
-		Gst.init("test", arg); //Now get GStreamer fired up
-		
-		playbin = new PlayBin2("test");
-		playbin.setURI(URI.create(fName)); //load the stream from the interwebs
-		
-		playbin.getBus().connect(new Bus.MESSAGE() { //set up a listener for events on the stream
-			public void busMessage(Bus bus, Message m) {
-					System.out.println("We have a message!");
-					switch(m.getType())
-					{
-						case BUFFERING:
-							int percent = 0;
-							//TODO
-							break;
-						case CLOCK_LOST:
-							break;
-						case DURATION:
-							System.err.println("Finished playing file");
-							Gst.quit(); //only supporting playing once right now
-							break;
-						case EOS: //we have reached the end of our file
-							
-						case ERROR:
-							System.err.println("Error occured: " + m);
-							Gst.quit(); //can't recover, so need to close
-							break;
-						case LATENCY:
-							break;
-						default: 
-							System.out.println("Something happened. Deal with it! " + m);
-					}
-				}
-			});
-		//Start playing
-		playbin.play();
-		//playbin.setState(State.PLAYING);
-		//Gst.main(); //plays the thing
-		//playbin.setState(State.NULL);
-		//Gst.deinit();
-		
-		
-		
 	}
 }
 

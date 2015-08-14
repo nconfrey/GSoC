@@ -28,9 +28,6 @@
 package template.library;
 
 import javax.imageio.*;
-import org.gstreamer.*;
-import org.gstreamer.Buffer;
-import org.gstreamer.elements.*;
 import java.awt.image.*;
 import java.net.*;
 import java.io.*;
@@ -87,106 +84,6 @@ public class VideoBroadcaster {
 	
 	private void welcome() {
 		System.out.println("##library.name## ##library.prettyVersion## by ##author##");
-	}
-	
-	//Test out the gstreamer stuff
-	public void test(String name, String fName){
-		String[] arg = { "idk" }; //this is where the Gstreamer options would go
-		
-		GStreamLink.init(); //Does all the linking of the GStreamer library files
-		arg = Gst.init(name,  arg); //Then get the framework ready
-		
-		//Pipeline pipe = Pipeline.launch("filesrc location=" + fName + " ! mad ! audioconvert ! audioresample ! osssink");
-		Pipeline pipe = Pipeline.launch("videotestsrc ! udpsink name=udp");
-		pipe.getElementByName("udp").set("host", "192.168.8.255");
-		pipe.getElementByName("udp").set("port", "8888");
-		pipe.play();
-		
-		Pipeline pipe2 = Pipeline.launch("udpsink name=udp ! autovideosink");
-		pipe2.getElementByName("udp").set("port", "8888");
-		pipe2.play();
-		
-		Gst.main();
-		
-		//Audio Player - tested working
-		/*
-		
-		*/
-		//Sample manual pipeline - tested working
-		/*
-		Pipeline pipe = new Pipeline(name);
-		Element src = ElementFactory.make("fakesrc", "Source");
-		Element sink = ElementFactory.make("fakesink", "Destination");
-		pipe.addMany(src, sink);
-		src.link(sink);
-		pipe.setState(State.PLAYING);
-		Gst.main(); //actually runs the thing
-		pipe.setState(State.NULL); //cleanup
-		*/
-	}
-	
-	//Wraps the gst-launch utility so that it can be used in processing.
-	//Can use any sample pipeline in the syntax of gst-launch
-	//Ex: "videotestsrc ! autovideosink" or "audiotestsrc ! autoaudiosink"
-	public void testPipeline(String piper)
-	{
-		String[] arg = { "idk" }; //this is where the Gstreamer options would go
-		
-		GStreamLink.init(); //Does all the linking of the GStreamer library files
-		
-		arg = Gst.init("Test Pipe",  arg); //Then get the framework ready
-		
-		Pipeline pipe = Pipeline.launch(piper);
-		pipe.play();
-		//Gst.main();
-	}
-	
-	public void testAudio(String name, String fName)
-	{
-		String[] arg = { "idk" }; //this is where the Gstreamer options would go
-		GStreamLink.init(); //Does all the linking of the GStreamer library files
-		arg = Gst.init(name,  arg); //Then get the framework ready
-		
-		PlayBin2 playbin = new PlayBin2(name);
-		playbin.setInputFile(new File(fName));
-		playbin.setVideoSink(ElementFactory.make("fakesink", "videosink"));
-		//Element udp = ElementFactory.make("udpsink", "udp");
-		//playbin.setAudioSink(udp);
-		playbin.setState(State.PLAYING);
-		Gst.main(); //do the actual playing
-		playbin.setState(State.NULL); //cleanup
-	}
-	
-	public void testStreamCast()
-	{
-		String ip = "127.0.0.1";
-		GStreamLink.init();
-		Gst.init("Server", new String[0]);
-		Pipeline pipe = new Pipeline();
-		Element vid = ElementFactory.make("videotestsrc", "test");
-		Element udpSink = ElementFactory.make("udpsink", "udpsink0");
-		udpSink.set("host", ip);
-		udpSink.set("port", 5000);
-		pipe.addMany(vid, udpSink);
-		Element.linkMany(vid, udpSink);
-		pipe.play();
-	}
-	
-	public void testStreamRecv()
-	{
-		GStreamLink.init();
-		
-		Pipeline pipeline0 = new Pipeline("pipeline0");
-		pipeline0.setState(State.NULL); 
-        pipeline0.setState(State.PAUSED);
-        
-		BaseSrc udpsrc0 = (BaseSrc) ElementFactory.make("udpsrc", "udpsrc0"); 
-		udpsrc0.set("port", 5000);
-		Element vidSink = ElementFactory.make("autovideosink", "vidSink");
-		
-		pipeline0.addMany(udpsrc0, vidSink);
-		Element.linkMany(udpsrc0, vidSink);
-		pipeline0.setState(State.PLAYING);
 	}
 	
 	public void broadcast(PImage img){

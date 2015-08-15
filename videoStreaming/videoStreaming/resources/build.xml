@@ -147,6 +147,16 @@ ${line}
 		<copy todir="${project.bin.data}">
 			<fileset dir="${project.data}" excludes="README" />
 		</copy>
+		
+	    <mkdir dir="bin" />
+	    <javac source="1.7"
+		   target="1.7"
+		   srcdir="${project.tmp}/${project.name}/src" destdir="bin" 
+		   encoding="UTF-8"
+		   includeAntRuntime="false"
+		   classpath="/home/nc/Downloads/processing-2.2.1/core/library/core.jar"
+		   nowarn="true">
+	    </javac>
 	</target>
 	
 	

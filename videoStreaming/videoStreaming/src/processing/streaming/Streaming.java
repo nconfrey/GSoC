@@ -1,10 +1,39 @@
 package processing.streaming;
 
+/**
+ * ##library.name##
+ * ##library.sentence##
+ * ##library.url##
+ *
+ * Copyright ##copyright## ##author##
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General
+ * Public License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA  02111-1307  USA
+ * 
+ * @author      ##author##
+ * @modified    ##date##
+ * @version     ##library.prettyVersion## (##library.version##)
+ * 
+ * HUGE Thanks to Andres Colubri, without his help this library wouldn't be possible
+ */
+
 import java.io.File;
 import processing.core.*;
 import java.lang.reflect.*;
 
-public class SimpleVideo {
+public class Streaming {
 
 	private static boolean loaded = false;
 	private static boolean error = false;
@@ -13,7 +42,7 @@ public class SimpleVideo {
 	private PApplet parent;
     private Method movieEventMethod;
 
-	public SimpleVideo(PApplet parent, String fn) {
+	public Streaming(PApplet parent, String fn) {
 		super();
         this.parent = parent; 
 
@@ -65,7 +94,7 @@ public class SimpleVideo {
 	}
 
 	//A simpler constructor for use without loading a movie
-	public SimpleVideo(PApplet parent)
+	public Streaming(PApplet parent)
 	{
 		super();
         this.parent = parent; 

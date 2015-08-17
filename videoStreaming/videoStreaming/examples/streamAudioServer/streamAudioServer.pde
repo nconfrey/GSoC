@@ -8,5 +8,5 @@ void setup()
 
 void draw()
 {
-    video.streamAudio("/home/nc/Desktop/GSoC/GSoC/videoStreaming/videoStreaming/data/groove.mp3");
+    video.streamAudio("192.168.1.1", 6969, "/home/nc/Desktop/GSoC/GSoC/videoStreaming/videoStreaming/data/fair.wav");
 }

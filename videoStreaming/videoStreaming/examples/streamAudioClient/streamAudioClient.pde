@@ -1,9 +1,9 @@
 import processing.streaming.*;
 
-SimpleVideo video;
+Streaming video;
 void setup()
 {
-    video = new SimpleVideo(this);
+    video = new Streaming(this);
 }
 
 void draw()

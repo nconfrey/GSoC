@@ -1,12 +1,12 @@
 import processing.streaming.*;
 
-SimpleVideo video;
+Streaming video;
 void setup()
 {
-    video = new SimpleVideo(this);
+    video = new Streaming(this);
 }
 
 void draw()
 {
-    video.streamAudio("/home/nc/Desktop/GSoC/GSoC/videoStreaming/videoStreaming/data/groove.wav");
+    video.streamAudio("/home/nc/Desktop/GSoC/GSoC/videoStreaming/videoStreaming/data/groove.mp3");
 }

@@ -1,4 +1,4 @@
-package template.library;
+package processing.streaming;
 
 import java.io.File;
 import processing.core.*;

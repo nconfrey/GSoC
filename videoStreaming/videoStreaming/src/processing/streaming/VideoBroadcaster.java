@@ -25,7 +25,7 @@
  * @version     ##library.prettyVersion## (##library.version##)
  */
 
-package template.library;
+package processing.streaming;
 
 import javax.imageio.*;
 import java.awt.image.*;

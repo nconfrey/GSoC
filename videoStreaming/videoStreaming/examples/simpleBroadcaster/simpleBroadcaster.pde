@@ -1,4 +1,4 @@
-import template.library.*;
+import processing.streaming.*;
 import java.io.*;
 import processing.video.*;
 

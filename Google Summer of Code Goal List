@@ -187,7 +187,10 @@ TODO BEFORE LIBRARY IS RELEASED:
 [] Change from SimpleVideo (this will also require recompiling the .so)
 [] Java Docs?
 [] Flesh out build.properties and make sure that all documentation is in order
+[] Comb code to make it look nicer
 [] Make independent from GStreamer (this will be difficult and potentially hazerdous)
 [] Attempt to make cross platform functionality
 
 Then! Build fun examples
+
+Rebuilding the native C code requires several steps. First, navigate to class->native and remove the existing iface.h. "make iface.h". This will make a new header file that will tell Java what the C functions look like. Your C functions need to have exactly these function names to be accessed in the Java (and to avoid linking errors, which will break the entire library). Next, recompile the shared binary library by "make". This will output libstreamer.so, which should be copied to the library->linux folder. Now finally go into Eclipse and run the ant buildfile again. Voila!

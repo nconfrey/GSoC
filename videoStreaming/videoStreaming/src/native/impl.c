@@ -13,7 +13,7 @@ GMainLoop *loop;
 #define MAX_VIDEOS 10
 video videos[MAX_VIDEOS];
 
-JNIEXPORT void JNICALL Java_template_library_SimpleVideo_gstreamer_1pipeline_1launch(JNIEnv *env, jobject thisObj, jstring launch)
+JNIEXPORT void JNICALL Java_processing_streaming_SimpleVideo_gstreamer_1pipeline_1launch(JNIEnv *env, jobject thisObj, jstring launch)
 {
 	//First, we need to convert the JNI string to a char*
     const char *inCStr = (*env)->GetStringUTFChars(env, launch, NULL);
@@ -47,7 +47,7 @@ JNIEXPORT void JNICALL Java_template_library_SimpleVideo_gstreamer_1pipeline_1la
     (*env)->ReleaseStringUTFChars(env, launch, inCStr);
 }
 
-JNIEXPORT jboolean JNICALL Java_template_library_SimpleVideo_gstreamer_1init (JNIEnv *env, jclass cls)
+JNIEXPORT jboolean JNICALL Java_processing_streaming_SimpleVideo_gstreamer_1init (JNIEnv *env, jclass cls)
 {
 	GError *err = NULL;
 
@@ -189,7 +189,7 @@ JNIEnv *g_env_ch;
 // First we need to register the callback method in java, and save the references.
 // Second, the callback needs to attach the current thread of the JVM because gstreamer
 // runs on a separate thread (I believe).
-JNIEXPORT jboolean JNICALL Java_template_library_SimpleVideo_gstreamer_1register
+JNIEXPORT jboolean JNICALL Java_processing_streaming_SimpleVideo_gstreamer_1register
 	(JNIEnv *env, jobject obj) {
         int returnValue = TRUE;
 		// convert local to global reference 
@@ -285,7 +285,7 @@ static void callback(GstMapInfo map_info) {
 
 
 #define CAPS "video/x-raw,format=RGB,width=640,height=360,pixel-aspect-ratio=1/1"
-JNIEXPORT jlong JNICALL Java_template_library_SimpleVideo_gstreamer_1loadFile(JNIEnv *env, jobject obj, jstring _fn)
+JNIEXPORT jlong JNICALL Java_processing_streaming_SimpleVideo_gstreamer_1loadFile(JNIEnv *env, jobject obj, jstring _fn)
 {
     GError *error = NULL;
 
@@ -374,7 +374,7 @@ JNIEXPORT jlong JNICALL Java_template_library_SimpleVideo_gstreamer_1loadFile(JN
 	return (long)v;
 }
 
-JNIEXPORT void JNICALL Java_template_library_SimpleVideo_gstreamer_1play(JNIEnv *env, jobject obj, jlong handle, jboolean _play)
+JNIEXPORT void JNICALL Java_processing_streaming_SimpleVideo_gstreamer_1play(JNIEnv *env, jobject obj, jlong handle, jboolean _play)
 {
 	video *v = get_video(handle);
 	if (v == NULL) {
@@ -388,7 +388,7 @@ JNIEXPORT void JNICALL Java_template_library_SimpleVideo_gstreamer_1play(JNIEnv 
 	}
 }
 
-JNIEXPORT void JNICALL Java_template_library_SimpleVideo_gstreamer_1seek(JNIEnv *env, jobject obj, jlong handle, jfloat sec)
+JNIEXPORT void JNICALL Java_processing_streaming_SimpleVideo_gstreamer_1seek(JNIEnv *env, jobject obj, jlong handle, jfloat sec)
 {
 	video *v = get_video(handle);
 	if (v == NULL) {
@@ -400,7 +400,7 @@ JNIEXPORT void JNICALL Java_template_library_SimpleVideo_gstreamer_1seek(JNIEnv 
 		GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
 }
 
-JNIEXPORT void JNICALL Java_template_library_SimpleVideo_gstreamer_1set_1loop(JNIEnv *env, jobject obj, jlong handle, jboolean loop)
+JNIEXPORT void JNICALL Java_processing_streaming_SimpleVideo_gstreamer_1set_1loop(JNIEnv *env, jobject obj, jlong handle, jboolean loop)
 {
 	video *v = get_video(handle);
 	if (v == NULL) {
@@ -410,7 +410,7 @@ JNIEXPORT void JNICALL Java_template_library_SimpleVideo_gstreamer_1set_1loop(JN
 	v->loop = loop;
 }
 
-JNIEXPORT jfloat JNICALL Java_template_library_SimpleVideo_gstreamer_1get_1duration(JNIEnv *env, jobject obj, jlong handle)
+JNIEXPORT jfloat JNICALL Java_processing_streaming_SimpleVideo_gstreamer_1get_1duration(JNIEnv *env, jobject obj, jlong handle)
 {
 	video *v = get_video(handle);
 	if (v == NULL) {
@@ -425,7 +425,7 @@ JNIEXPORT jfloat JNICALL Java_template_library_SimpleVideo_gstreamer_1get_1durat
 	}
 }
 
-JNIEXPORT jfloat JNICALL Java_template_library_SimpleVideo_gstreamer_1get_1time(JNIEnv *env, jobject obj, jlong handle)
+JNIEXPORT jfloat JNICALL Java_processing_streaming_SimpleVideo_gstreamer_1get_1time(JNIEnv *env, jobject obj, jlong handle)
 {
 	video *v = get_video(handle);
 	if (v == NULL) {

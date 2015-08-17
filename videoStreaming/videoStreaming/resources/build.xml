@@ -148,10 +148,10 @@ ${line}
 			<fileset dir="${project.data}" excludes="README" />
 		</copy>
 		
-	    <mkdir dir="bin" />
+	    <mkdir dir="class" />
 	    <javac source="1.7"
 		   target="1.7"
-		   srcdir="${project.tmp}/${project.name}/src" destdir="bin" 
+		   srcdir="${project.tmp}/${project.name}/src" destdir="class" 
 		   encoding="UTF-8"
 		   includeAntRuntime="false"
 		   classpath="/home/nc/Downloads/processing-2.2.1/core/library/core.jar"

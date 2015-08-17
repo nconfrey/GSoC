@@ -1,4 +1,4 @@
-package template.library;
+package processing.streaming;
 
 public class GStreamLink10 {
 	

@@ -1,5 +1,4 @@
-import template.library.*;
-
+import processing.streaming.*;
 VideoReceiver vc;
 PImage img;
 

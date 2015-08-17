@@ -1,4 +1,4 @@
-import template.library.*;
+import processing.streaming.*;
 
 SimpleVideo video;
 void setup()
@@ -8,5 +8,5 @@ void setup()
 
 void draw()
 {
-    video.streamAudio("192.168.1.1", 6969, "/home/nc/Desktop/GSoC/GSoC/videoStreaming/videoStreaming/data/fair.wav");
+    video.streamAudio("/home/nc/Desktop/GSoC/GSoC/videoStreaming/videoStreaming/data/groove.wav");
 }

@@ -40,7 +40,7 @@ $(TARGET): $(OBJS)
 	$(CC) $^ -o $@ $(CFLAGS) $(LDFLAGS)
 
 iface.h:
-	javah -classpath .. -o iface.h processing.simplevideo.SimpleVideo
+	javah -classpath .. -o iface.h processing.streaming.SimpleVideo
 
 clean:
 	rm -f $(TARGET) $(OBJS)

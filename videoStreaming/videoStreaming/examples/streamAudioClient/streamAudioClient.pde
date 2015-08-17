@@ -1,4 +1,4 @@
-import template.library.*;
+import processing.streaming.*;
 
 SimpleVideo video;
 void setup()

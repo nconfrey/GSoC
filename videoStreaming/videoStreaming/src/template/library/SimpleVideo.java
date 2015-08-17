@@ -155,16 +155,22 @@ public class SimpleVideo {
     	gstreamer_pipeline_launch(pipe);
     }
     
-    //Takes an audio file and streams it via local host and port 6969
+    //Takes an audio file and streams it via local host and port 6969, no argument default
     //Use the corresponding method receiveAudio() to easily receive the stream
-    //TODO: Threading!
     public void streamAudio(String filepath)
+    {
+    	streamAudio(filepath, 6969, "127.0.0.1");
+    }
+    
+    //TODO: Threading!
+    public void streamAudio(String filepath, int port, String host)
     {
     	//Validate Filepath
     	File f = new File(filepath);
     	if(f.exists()) 
-    	{ 
-    		String pipe = "filesrc location=" + filepath + " ! decodebin ! audioconvert ! rtpL16pay ! udpsink port=6969 host=127.0.0.1";
+    	{
+    		String portt = Integer.toString(port);
+    		String pipe = "filesrc location=" + filepath + " ! decodebin ! audioconvert ! rtpL16pay ! udpsink port=" + portt + " host=" + host;
     		gstreamer_pipeline_launch(pipe);
     	}
     	else
@@ -173,10 +179,16 @@ public class SimpleVideo {
     	}
     }
     
-    //Assumes there is already data coming in from streamAudio(), receives from localhost and post 6969
+    //Assumes there is already data coming in from streamAudio(), receives from localhost and port 6969 (no argument default)
     public void receiveAudio()
     {
-    	gstreamer_pipeline_launch("udpsrc port=6969 caps=\"application/x-rtp, media=(string)audio, format=(string)S32LE, layout=(string)interleaved, clock-rate=(int)44100, channels=(int)2, payload=(int)0\" ! rtpL16depay ! playsink");
+    	receiveAudio(6969);
+    }
+    
+    public void receiveAudio(int port)
+    {
+    	String portt = Integer.toString(port);
+    	gstreamer_pipeline_launch("udpsrc port=" + portt + " caps=\"application/x-rtp, media=(string)audio, format=(string)S32LE, layout=(string)interleaved, clock-rate=(int)44100, channels=(int)2, payload=(int)0\" ! rtpL16depay ! playsink");
     }
 
 	private static native boolean gstreamer_init();

@@ -177,3 +177,17 @@ gst-launch-1.0 udpsrc port=5555 ! "application/x-rtp, payload=127" ! rtph264depa
 HOLY FUCKING SHIT THIS WORKSSSSS
 gst-launch-1.0 -v filesrc location=/home/nc/groove.mp3 ! decodebin ! audioconvert ! rtpL16pay ! udpsink port=6969 host=127.0.0.1
 gst-launch-1.0 -v udpsrc port=6969 caps="application/x-rtp, media=(string)audio, format=(string)S32LE, layout=(string)interleaved, clock-rate=(int)44100, channels=(int)2, payload=(int)0" ! rtpL16depay ! playsink
+
+If ant is being stupid, add the jars it can't find:
+http://help.eclipse.org/luna/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Ftasks%2Ftasks-ant-classpath.htm
+
+TODO BEFORE LIBRARY IS RELEASED:
+
+[] Change from template.library (note: this will involve recompiling the library again with the proper C JNI function headers)
+[] Change from SimpleVideo (this will also require recompiling the .so)
+[] Java Docs?
+[] Flesh out build.properties and make sure that all documentation is in order
+[] Make independent from GStreamer (this will be difficult and potentially hazerdous)
+[] Attempt to make cross platform functionality
+
+Then! Build fun examples

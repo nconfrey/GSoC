@@ -86,6 +86,9 @@ TESTED WORKING VIDEO TRANSMISSION:
 gst-launch-1.0 videotestsrc ! jpegenc ! rtpjpegpay ! udpsink host=127.0.0.1 port=5200
 gst-launch-1.0 udpsrc port=5200 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegdec ! autovideosink
 
+TESTING SHIT
+gst-launch-1.0 filesrc location=/home/nc/transit.mov ! jpegenc ! rtpjpegpay ! udpsink host=127.0.0.1 port=5200
+
 C:\Users\Nick\Videos\Bad.mpg
 
 gst-launch-1.0 filesrc location=C:\Users\Nick\Videos\Bad.mpg ! dvddemux name=demuxer demuxer. ! queue ! mpeg2dec ! sdlvideosink demuxer. ! queue ! mad ! audioconvert ! audioresample ! osssink 
@@ -184,7 +187,7 @@ http://help.eclipse.org/luna/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2F
 TODO BEFORE LIBRARY IS RELEASED:
 
 [x] Change from template.library (note: this will involve recompiling the library again with the proper C JNI function headers)
-[] Change from SimpleVideo (this will also require recompiling the .so)
+[x] Change from SimpleVideo (this will also require recompiling the .so)
 [] Java Docs?
 [] Flesh out build.properties and make sure that all documentation is in order
 [] Comb code to make it look nicer
@@ -192,6 +195,61 @@ TODO BEFORE LIBRARY IS RELEASED:
 [] Attempt to make cross platform functionality
 [] Clean up makefile
 
+More extensive matters:
+
+[] test with other audio types
+[] VIDEO STREAMING
+[] can maybe do some advanced internet streaming with https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#q=gstreamer+stream+video+example
+
 Then! Build fun examples
 
 Rebuilding the native C code requires several steps. First, navigate to class->native and remove the existing iface.h. "make iface.h". This will make a new header file that will tell Java what the C functions look like. Your C functions need to have exactly these function names to be accessed in the Java (and to avoid linking errors, which will break the entire library). Next, recompile the shared binary library by "make". This will output libstreamer.so, which should be copied to the library->linux folder. Now finally go into Eclipse and run the ant buildfile again. Voila!
+
+FUCK i'm going to do something realllllly stupid
+
+gir1.2-gstreamer-1.0				install
+gstreamer1.0-alsa:amd64				install
+gstreamer1.0-clutter				install
+gstreamer1.0-libav:amd64			install
+gstreamer1.0-nice:amd64				install
+gstreamer1.0-plugins-bad:amd64			install
+gstreamer1.0-plugins-bad-faad:amd64		install
+gstreamer1.0-plugins-bad-videoparsers:amd64	install
+gstreamer1.0-plugins-base:amd64			install
+gstreamer1.0-plugins-base-apps			install
+gstreamer1.0-plugins-base-dbg:amd64		install
+gstreamer1.0-plugins-good:amd64			install
+gstreamer1.0-plugins-good-dbg:amd64		install
+gstreamer1.0-plugins-ugly:amd64			install
+gstreamer1.0-pulseaudio:amd64			install
+gstreamer1.0-tools				install
+gstreamer1.0-x:amd64				install
+libgstreamer-plugins-bad1.0-0:amd64		install
+libgstreamer-plugins-base1.0-0:amd64		install
+libgstreamer-plugins-base1.0-0:i386		install
+libgstreamer-plugins-base1.0-dev		install
+libgstreamer-plugins-good1.0-0:amd64		install
+libgstreamer-plugins-good1.0-dev		install
+libgstreamer1.0-0:amd64				install
+libgstreamer1.0-0:i386				install
+libgstreamer1.0-dev				install
+libreoffice-avmedia-backend-gstreamer		install
+
+Webcam craps out, but i wonder if I can tweak this pipeline to work
+gst-launch-1.0 -v filesrc location=/home/nc/transit.mov ! qtdemux ! h264parse ! ffdec_h264 ! ffmpegcolorspace ! x264enc ! rtph264pay ! udpsink host=127.0.0.1 port=5000
+
+gst-launch-1.0 filesrc location=/home/nc/transit.mov ! queue ! qtdemux name=dem dem. ! queue ! rtph264pay ! udpsink host=127.0.0.1 port=6969 auto-multicast=true dem. ! queue ! rtpmp4apay ! udpsink host=127.0.0.1 port=6970 auto-multicast=true
+
+gst-launch-1.0 udpsrc multicast-group=127.0.0.1 auto-multicast=true port=6969 caps = 'video/x-h264, stream-format=(string)avc, alignment=(string)au, level=(string)3.1, profile=(string)main, codec_data=(buffer)014d401fffe10017674d401fda014016ec0440000003004000000c83c60ca801000468ef3c80, width=(int)1280, height=(int)720, framerate=(fraction)25/1, pixel-aspect-ratio=(fraction)1/1' ! rtph264depay ! avdec_h264 ! videoconvert ! ximagesink
+
+gst-launch-1.0 udpsrc multicast-group=127.0.0.1 auto-multicast=true port=6969 caps = 'application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264' ! rtph264depay ! avdec_h264 ! videoconvert ! ximagesink
+
+
+
+
+
+Taking working video camera streaming:
+gst-launch-1.0 v4l2src ! 'video/x-raw, width=640, height=480, framerate=30/1' ! videoconvert ! x264enc pass=qual quantizer=20 tune=zerolatency ! rtph264pay ! udpsink host=127.0.0.1 port=5555
+gst-launch-1.0 udpsrc port=5555 ! "application/x-rtp, payload=127" ! rtph264depay ! avdec_h264 ! videoconvert  ! xvimagesink sync=false
+
+gst-launch-1.0 filesrc location=/home/nc/transit.mov ! videoparse width=640, height=480, framerate=30/1 ! videoconvert ! x264enc pass=qual quantizer=20 tune=zerolatency ! rtph264pay ! udpsink host=127.0.0.1 port=5555

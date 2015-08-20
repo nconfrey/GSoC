@@ -128,10 +128,8 @@ static gboolean streaming_bus_callback(GstBus *bus, GstMessage *message, gpointe
         	GST_OBJECT_NAME (message->src),
        		gst_element_state_get_name (old_state),
         	gst_element_state_get_name (new_state));
-    break;
-
-      	}
-      break;
+    		break;
+		}
 		default:
 			break;
 	}
@@ -226,6 +224,7 @@ JNIEXPORT jboolean JNICALL Java_processing_streaming_Streaming_gstreamer_1regist
           g_print ("Failed to find class\n");			
 		}
 
+		//Set the reading method (and the one where data will be shuttled to)
 		g_mid = (*env)->GetMethodID(env, g_clazz, "readFrame", "([I)V");
 		if (g_mid == NULL) {
           g_print ("Unable to get method ref\n");
@@ -257,7 +256,7 @@ static void callback(GstMapInfo map_info) {
 
 // calling from the cached environment crashes the java application
 //  (*g_env)->CallVoidMethod(g_obj, g_mid, val);
-
+	g_print("appsink called back\n");
 	JNIEnv *g_env;
 	// double check it's all ok
 
@@ -290,6 +289,8 @@ static void callback(GstMapInfo map_info) {
    (*g_env)->SetIntArrayRegion(g_env, pixels, 0 , size, map_info.data);
 
 
+   	//This is where we call the movieEvent function in Processing
+   	//And pass it the array of pixels
 	(*g_env)->CallVoidMethod(g_env, g_obj, g_mid, pixels);	
 	
 

@@ -63,7 +63,7 @@ public class VideoReceiver implements PConstants{
 	 */
 	
 	//TODO: have a better way of getting dimensions into here
-	//TODO: don't require the user to initiliaze the PImage.
+	//TODO: don't require the user to initilize the PImage.
 	//But why is createImage not working???
 	public VideoReceiver (PApplet theParent, int port, int w, int h, PImage img) {
 		myParent = theParent;

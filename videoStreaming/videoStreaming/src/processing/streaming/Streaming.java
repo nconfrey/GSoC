@@ -91,24 +91,13 @@ public class Streaming {
 	}
 	
 	//Simpler constructor when not loading a video (audio streaming or videostreaming, for example)
-	public Streaming(PApplet parent, int port, int width, int height) {
+	public Streaming(PApplet parent, int width, int height) {
 		super();
         this.parent = parent;
         this.width = width;
         this.height = height;
         
-		loadGstreamer(height, width);
-		
-		// appsink must be named "sink"
-		pipeline = "udpsrc port=" + Integer.toString(port)
-				+ " caps=\"application/x-rtp, payload=127\" ! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=sink caps=\"" 
-				+ caps + "\"";
-		//filename is set to null because we are streaming from network and don't need to load file
-		//streaming is set to true
-		handle = gstreamer_loadFile(null, pipeline, true);
-		if (handle == 0) {
-			throw new RuntimeException("Could not load video");
-		}	
+		loadGstreamer(height, width);	
 	}
 	
 	//Links against libstreamvideo.so, the JNI binding to the native c code in impl.c
@@ -139,6 +128,31 @@ public class Streaming {
         } catch (Exception e) {
           // no such method, or an error... which is fine, just ignore
         }
+	}
+	
+	public void videoReceive(int port)
+	{
+		// appsink must be named "sink"
+		pipeline = "udpsrc port=" + Integer.toString(port)
+				+ " caps=\"application/x-rtp, payload=127\" ! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=sink caps=\"" 
+				+ caps + "\"";
+		//filename is set to null because we are streaming from network and don't need to load file
+		//streaming is set to true
+		handle = gstreamer_loadFile(null, pipeline, true);
+		if (handle == 0) {
+			throw new RuntimeException("Could not launch stream receive pipeline");
+		}
+	}
+	
+	public void videoBroadcast(String ip, int port, String filename)
+	{
+		pipeline = "filesrc location=" + filename
+				+ " ! decodebin name=dec ! queue ! videoconvert ! x264enc pass=qual quantizer=20 tune=zerolatency "
+				+ "! rtph264pay config-interval=1 ! udpsink host=" + ip
+				+ " port=" + Integer.toString(port)
+				+ " sync=true dec. ! queue ! audioconvert ! audioresample ! autoaudiosink";
+		//System.out.println("Running: " + pipeline);
+		gstreamer_pipeline_launch(pipeline);
 	}
 	
 	public void dispose() {

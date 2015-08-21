@@ -5,8 +5,7 @@ PImage img;
 void setup()
 {
   size(320, 240);
-  img = createImage(320, 240, RGB);
-  vc = new VideoReceiver(this, 8008, 320, 240, img);
+  vc = new VideoReceiver(this, 8008, 320, 240);
 }
 
 void draw()

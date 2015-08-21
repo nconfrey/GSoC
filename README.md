@@ -2,7 +2,7 @@ Nick Confrey's Google Summer of Code Project 2015
 ======
 ###Google Summer of Code Project for [Processing.org](https://processing.org/)
 
-This project is broken up into roughly three useful parts. It originally focused on streaming media over the network, primarily video and audio streams, but evolved to include revamping Processing's video core video framework. 
+This project is broken up into roughly three useful parts. It originally focused on streaming media over the network, primarily video and audio streams, but evolved to include revamping Processing's video core video framework. I planned to write networking code in Java, but the project evolved to consist of learning and developing C to Java conversion through Java Native Interface and Java Native Access. Along the way I also picked up skills in video codecs, network packet payloading, and audio encoding.
 
 The first part of the project was modifications and extensions to the existing Processing network library. 
 

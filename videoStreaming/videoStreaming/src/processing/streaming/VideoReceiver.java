@@ -63,15 +63,12 @@ public class VideoReceiver implements PConstants{
 	 */
 	
 	//TODO: have a better way of getting dimensions into here
-	//TODO: don't require the user to initilize the PImage.
-	//But why is createImage not working???
-	public VideoReceiver (PApplet theParent, int port, int w, int h, PImage img) {
+	public VideoReceiver (PApplet theParent, int port, int w, int h) {
 		myParent = theParent;
 		this.port = port;
-		this.img = img;
 		welcome();
 		
-		//img = createImage(w, h, RGB);
+		img = myParent.createImage(w, h, RGB);
 		
 		try{
 			ds = new DatagramSocket(port);

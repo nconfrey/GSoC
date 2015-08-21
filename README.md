@@ -2,7 +2,8 @@ Nick Confrey's Google Summer of Code Project 2015
 ======
 ###Google Summer of Code Project for [Processing.org](https://processing.org/)
 **Thanks to [Andres Coulbri](https://github.com/codeanticode/) and [Gottfried Haider](https://github.com/gohai) for their exceptionally helpful code and examples. Thanks also to my mentor Dan Shiffman for direction and help throughout all the weeks.**
- ##### This document reflects work completed up until the GSoC deadline (8/21/15). They require that I stop coding at this point, but continuing developments after GSoC can be found [here](https://github.com/nconfrey/GSoC/).
+
+#####This document reflects work completed up until the GSoC deadline (8/21/15). They require that I stop coding at this point, but continuing developments after GSoC can be found [here](https://github.com/nconfrey/GSoC/).
 
 This project is broken up into roughly three useful parts. It originally focused on streaming media over the network, primarily video and audio streams, but evolved to include revamping Processing's video core video framework. I planned to write networking code in Java, but the project evolved to consist of learning and developing C to Java conversion through Java Native Interface and Java Native Access. Along the way I also picked up skills in video codecs, network packet payloading, and audio encoding.
 

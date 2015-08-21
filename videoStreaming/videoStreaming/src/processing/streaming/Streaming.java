@@ -39,12 +39,12 @@ public class Streaming {
 	private static boolean error = false;
 
 	// capabilities passed to GStreamer
-	protected static String caps = "video/x-raw,format=RGB,width=640,height=360,pixel-aspect-ratio=1/1";
+	protected static String caps; //"video/x-raw,format=RGB,width=640,height=360,pixel-aspect-ratio=1/1";
 	// pipeline description passed to GStreamer
 	// first %s is the uri (filled in by native code)
 	// appsink must be named "sink" (XXX: change)
-	//private static String pipeline = "uridecodebin uri=%s ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\"";
-	private static String pipeline = "udpsrc port=5555 caps=\"application/x-rtp, payload=127\" ! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\"";
+	private static String pipeline;
+	//private static String pipeline = "udpsrc port=5555 caps=\"application/x-rtp, payload=127\" ! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\"";
 	//private static String pipeline = "uridecodebin uri=%s ! decodebin name=dec ! queue ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\" dec. ! queue ! audioconvert ! audioresample ! autoaudiosink";
 
 	
@@ -52,25 +52,14 @@ public class Streaming {
 	private PApplet parent;
     private Method movieEventMethod;
 
-	public Streaming(PApplet parent, String fn) {
+    //Use this constructor when just playing a movie
+	public Streaming(PApplet parent, String fn, int width, int height) {
 		super();
-        this.parent = parent; 
-
-		if (!loaded) {
-			System.out.println(System.getProperty("java.library.path"));
-			System.loadLibrary("streamvideo");
-			loaded = true;
-			if (gstreamer_init() == false) {
-				error = true;
-			}
-		}
-
-		if (error) {
-			throw new RuntimeException("Could not load gstreamer");
-		}
+        this.parent = parent;
+        
+        loadGstreamer(height, width);
 		
 		//Once again, do we need it to be a URI?
-		//Think about getting rid of this for streaming sources
 
 		// get absolute path for fn
 		if (fn.indexOf("://") != -1) {
@@ -87,16 +76,63 @@ public class Streaming {
 			}
 		}
 
-		handle = gstreamer_loadFile(fn, pipeline, true);
+		//This is a simple pipeline to launch a video
+		//Videoconvert handles conversion between many different common video types
+		//the format string will be filled in in the native code
+		pipeline = "uridecodebin uri=%s ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\"";
+		
+		//false because this pipeline is not streaming and needs to be loaded from the local disk
+		handle = gstreamer_loadFile(fn, pipeline, false);
 		if (handle == 0) {
 			throw new RuntimeException("Could not load video");
+		}	
+	}
+	
+	//Simpler constructor when not loading a video (audio streaming or videostreaming, for example)
+	public Streaming(PApplet parent, int port, int width, int height) {
+		super();
+        this.parent = parent;
+        
+		loadGstreamer(height, width);
+		
+		pipeline = "udpsrc port=" + Integer.toString(port)
+				+ " caps=\"application/x-rtp, payload=127\" ! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=sink caps=\"" 
+				+ caps + "\"";
+		//filename is set to null because we are streaming from network and don't need to load file
+		//streaming is set to true
+		handle = gstreamer_loadFile(null, pipeline, true);
+		if (handle == 0) {
+			throw new RuntimeException("Could not load video");
+		}	
+	}
+	
+	//Links against libstreamvideo.so, the JNI binding to the native c code in impl.c
+	private void loadGstreamer(int height, int width)
+	{
+		if (!loaded) {
+			System.out.println(System.getProperty("java.library.path"));
+			System.loadLibrary("streamvideo");
+			loaded = true;
+			if (gstreamer_init() == false) {
+				error = true;
+			}
 		}
+
+		if (error) {
+			throw new RuntimeException("Could not load gstreamer");
+		}
+		
+        //Give the dimensions to GStreamer, and tell it the format of the video
+        caps = "video/x-raw,format=RGB,"
+        	 + "width=" + Integer.toString(width)
+        	 + ",height=" + Integer.toString(height)
+        	 + ",pixel-aspect-ratio=1/1";
 		
         try {
           movieEventMethod = parent.getClass().getMethod("movieEvent", int[].class);
         } catch (Exception e) {
           // no such method, or an error... which is fine, just ignore
-        }		
+        }
 	}
 	
 	public void dispose() {

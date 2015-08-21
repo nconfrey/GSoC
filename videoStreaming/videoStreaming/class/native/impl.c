@@ -69,6 +69,7 @@ JNIEXPORT jboolean JNICALL Java_processing_streaming_Streaming_gstreamer_1init (
 	return TRUE;
 }
 
+//Handles messages from the bus on the pipeline
 static gboolean streaming_bus_callback(GstBus *bus, GstMessage *message, gpointer data)
 {
 	g_print("Got %s message\n", GST_MESSAGE_TYPE_NAME (message));
@@ -214,6 +215,8 @@ static GstFlowReturn appsink_new_sample(GstAppSink *sink, gpointer user_data) {
 // Idea: Use gst-gl element?
 // https://coaxion.net/blog/2014/04/opengl-support-in-gstreamer/
 // http://cgit.freedesktop.org/gstreamer/gst-plugins-bad/tree/tests/examples/gl/generic/doublecube/main.cpp
+
+//Frames are stored in the video struct, just need to retrieve the previously rendered frames
 JNIEXPORT jbyteArray JNICALL Java_processing_streaming_Streaming_gstreamer_1get_1frame
   (JNIEnv *env, jobject obj, jlong handle)
 {
@@ -251,7 +254,7 @@ void setupAppsink(video *v)
   free(appsink_callbacks);
 }
 
-JNIEXPORT jlong JNICALL Java_processing_streaming_Streaming_gstreamer_1loadFile(JNIEnv *env, jobject obj, jstring _fn, jstring _pipeline)
+JNIEXPORT jlong JNICALL Java_processing_streaming_Streaming_gstreamer_1loadFile(JNIEnv *env, jobject obj, jstring _fn, jstring _pipeline, jboolean live)
 {
     GError *error = NULL;
 
@@ -262,12 +265,17 @@ JNIEXPORT jlong JNICALL Java_processing_streaming_Streaming_gstreamer_1loadFile(
 
 	//This encodes the file name are a uri - do we need it?
 	//What about my streaming sources, probably shouldn't have this?
-	const char *fn = (*env)->GetStringUTFChars(env, _fn, JNI_FALSE);
+
+	//Only need to resolve URI for non-live sources
 	gchar *uri;
-	if (strstr(fn, "://") == NULL) {
-		uri = gst_filename_to_uri(fn, NULL);
-	} else {
-		uri = g_strdup(fn);
+	if(live == JNI_FALSE){
+		const char *fn = (*env)->GetStringUTFChars(env, _fn, JNI_FALSE);
+		if (strstr(fn, "://") == NULL) {
+			uri = gst_filename_to_uri(fn, NULL);
+		} else {
+			uri = g_strdup(fn);
+		}
+		(*env)->ReleaseStringUTFChars(env, _fn, fn);
 	}
 	
     /* create a new pipeline */
@@ -278,12 +286,16 @@ JNIEXPORT jlong JNICALL Java_processing_streaming_Streaming_gstreamer_1loadFile(
     //gchar *descr = g_strdup_printf ("udpsrc port=5555 caps=\"application/x-rtp, payload=127\" ! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=sink caps=\"" CAPS "\"");                                       
     
 	const char *pipeline = (*env)->GetStringUTFChars(env, _pipeline, JNI_FALSE);
-  	gchar *descr = g_strdup_printf(pipeline, uri);
+	gchar *descr;
+	if(live == JNI_FALSE)
+  		descr = g_strdup_printf(pipeline, uri);
+  	else
+  		descr = g_strdup(pipeline);
     g_free(uri);
 
     //Free Strings
     (*env)->ReleaseStringUTFChars(env, _pipeline, pipeline);
-    (*env)->ReleaseStringUTFChars(env, _fn, fn);
+    
     
     v->play = gst_parse_launch (descr, &error);
 

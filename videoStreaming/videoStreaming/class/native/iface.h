@@ -18,10 +18,10 @@ JNIEXPORT jboolean JNICALL Java_processing_streaming_Streaming_gstreamer_1init
 /*
  * Class:     processing_streaming_Streaming
  * Method:    gstreamer_loadFile
- * Signature: (Ljava/lang/String;Ljava/lang/String;)J
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Z)J
  */
 JNIEXPORT jlong JNICALL Java_processing_streaming_Streaming_gstreamer_1loadFile
-  (JNIEnv *, jobject, jstring, jstring);
+  (JNIEnv *, jobject, jstring, jstring, jboolean);
 
 /*
  * Class:     processing_streaming_Streaming

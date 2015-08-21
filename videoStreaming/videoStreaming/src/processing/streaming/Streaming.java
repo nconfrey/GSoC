@@ -43,8 +43,8 @@ public class Streaming {
 	// pipeline description passed to GStreamer
 	// first %s is the uri (filled in by native code)
 	// appsink must be named "sink" (XXX: change)
-	private static String pipeline = "uridecodebin uri=%s ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\"";
-	//private static String pipeline = "udpsrc port=5555 caps=\"application/x-rtp, payload=127\" ! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=sink caps=\"" CAPS "\"");
+	//private static String pipeline = "uridecodebin uri=%s ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\"";
+	private static String pipeline = "udpsrc port=5555 caps=\"application/x-rtp, payload=127\" ! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\"";
 	//private static String pipeline = "uridecodebin uri=%s ! decodebin name=dec ! queue ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\" dec. ! queue ! audioconvert ! audioresample ! autoaudiosink";
 
 	
@@ -87,7 +87,7 @@ public class Streaming {
 			}
 		}
 
-		handle = gstreamer_loadFile(fn, pipeline);
+		handle = gstreamer_loadFile(fn, pipeline, true);
 		if (handle == 0) {
 			throw new RuntimeException("Could not load video");
 		}
@@ -97,26 +97,6 @@ public class Streaming {
         } catch (Exception e) {
           // no such method, or an error... which is fine, just ignore
         }		
-	}
-
-	//A simpler constructor for use without loading a movie
-	public Streaming(PApplet parent)
-	{
-		super();
-        this.parent = parent; 
-
-		if (!loaded) {
-			System.out.println(System.getProperty("java.library.path"));
-			System.loadLibrary("streamvideo");
-			loaded = true;
-			if (gstreamer_init() == false) {
-				error = true;
-			}
-		}
-
-		if (error) {
-			throw new RuntimeException("Could not load gstreamer");
-		}
 	}
 	
 	public void dispose() {
@@ -250,7 +230,7 @@ public class Streaming {
     }
 
     private static native boolean gstreamer_init();
-    private native long gstreamer_loadFile(String fn, String pipeline);
+    private native long gstreamer_loadFile(String fn, String pipeline, boolean live);
     private native void gstreamer_play(long handle, boolean play);
     private native void gstreamer_seek(long handle, float sec);
     private native void gstreamer_set_loop(long handle, boolean loop);

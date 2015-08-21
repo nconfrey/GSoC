@@ -38,6 +38,16 @@ public class Streaming {
 	private static boolean loaded = false;
 	private static boolean error = false;
 
+	// capabilities passed to GStreamer
+	protected static String caps = "video/x-raw,format=RGB,width=640,height=360,pixel-aspect-ratio=1/1";
+	// pipeline description passed to GStreamer
+	// first %s is the uri (filled in by native code)
+	// appsink must be named "sink" (XXX: change)
+	private static String pipeline = "uridecodebin uri=%s ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\"";
+	//private static String pipeline = "udpsrc port=5555 caps=\"application/x-rtp, payload=127\" ! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=sink caps=\"" CAPS "\"");
+	//private static String pipeline = "uridecodebin uri=%s ! decodebin name=dec ! queue ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\" dec. ! queue ! audioconvert ! audioresample ! autoaudiosink";
+
+	
 	private long handle = 0;
 	private PApplet parent;
     private Method movieEventMethod;
@@ -58,12 +68,9 @@ public class Streaming {
 		if (error) {
 			throw new RuntimeException("Could not load gstreamer");
 		}
-
-        if (gstreamer_register()) {
-          System.out.println("Registered callback go pull frames from gstreamer!");
-        } else {
-          throw new RuntimeException("Could not register callback");
-        }
+		
+		//Once again, do we need it to be a URI?
+		//Think about getting rid of this for streaming sources
 
 		// get absolute path for fn
 		if (fn.indexOf("://") != -1) {
@@ -80,14 +87,13 @@ public class Streaming {
 			}
 		}
 
-		handle = gstreamer_loadFile(fn);
+		handle = gstreamer_loadFile(fn, pipeline);
 		if (handle == 0) {
 			throw new RuntimeException("Could not load video");
 		}
 		
         try {
           movieEventMethod = parent.getClass().getMethod("movieEvent", int[].class);
-          return;
         } catch (Exception e) {
           // no such method, or an error... which is fine, just ignore
         }		
@@ -151,19 +157,42 @@ public class Streaming {
 		return gstreamer_get_time(handle);
 	}
 
-    public void readFrame(int[] pixels) {
-      // do stuff
-      System.out.println("data from gstreamer: " + pixels.length);
-      
-      if (movieEventMethod != null) {
-        try {
-          movieEventMethod.invoke(parent, pixels);
-        } catch (Exception e) {
-          e.printStackTrace();
-          movieEventMethod = null;
-        }   
-      }   
-    }
+	public PImage getFrame() {
+	    byte[] buffer = gstreamer_get_frame(handle);
+	    if (buffer == null) {
+	      return null;
+	    }
+
+	    PImage frame = parent.createImage(640, 360, PConstants.RGB);
+
+	    // XXX: not working quite right
+	    // XXX: we also need to handle the audio somehow
+	    int idx = 0;
+	    frame.loadPixels();
+	    for (int i = 0; i < buffer.length/3; i++) {
+	      int ri = 3 * i + 0;
+	      int gi = 3 * i + 1;
+	      int bi = 3 * i + 2;
+	      int r = buffer[ri];
+	      int g = buffer[gi];
+	      int b = buffer[bi];
+	      frame.pixels[idx++] = 0xFF000000 | (r << 16) | (g << 8) | b;
+	    }
+	    frame.updatePixels();
+
+	    /*
+	    if (movieEventMethod != null) {
+	      try {
+	        movieEventMethod.invoke(parent, pixels);
+	      } catch (Exception e) {
+	        e.printStackTrace();
+	        movieEventMethod = null;
+	      }
+	    }
+	    */
+	    
+	    return frame;
+	  }
     
     public static void pipelineLaunch(String pipe)
     {
@@ -220,14 +249,14 @@ public class Streaming {
     	gstreamer_pipeline_launch("udpsrc port=" + portt + " caps=\"application/x-rtp, media=(string)audio, format=(string)S32LE, layout=(string)interleaved, clock-rate=(int)44100, channels=(int)2, payload=(int)0\" ! rtpL16depay ! playsink");
     }
 
-	private static native boolean gstreamer_init();
-	private native boolean gstreamer_register();	
-	private native long gstreamer_loadFile(String fn);
-	private native void gstreamer_play(long handle, boolean play);
-	private native void gstreamer_seek(long handle, float sec);
-	private native void gstreamer_set_loop(long handle, boolean loop);
-	private native float gstreamer_get_duration(long handle);
-	private native float gstreamer_get_time(long handle);
+    private static native boolean gstreamer_init();
+    private native long gstreamer_loadFile(String fn, String pipeline);
+    private native void gstreamer_play(long handle, boolean play);
+    private native void gstreamer_seek(long handle, float sec);
+    private native void gstreamer_set_loop(long handle, boolean loop);
+    private native float gstreamer_get_duration(long handle);
+    private native float gstreamer_get_time(long handle);
+    private native byte[] gstreamer_get_frame(long handle);
 	
 	private static native void gstreamer_pipeline_launch(String pipe);
 

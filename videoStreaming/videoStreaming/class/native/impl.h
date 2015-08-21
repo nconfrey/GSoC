@@ -7,7 +7,9 @@ typedef struct video_type {
 	GstBus *bus;
 	jobject obj;
 	int loop;
+	GstMapInfo* buf[2];
 } video;
+
 
 static void* simplevideo_mainloop(void *data);
 static GstFlowReturn app_sink_new_sample(GstAppSink *sink, gpointer user_data);

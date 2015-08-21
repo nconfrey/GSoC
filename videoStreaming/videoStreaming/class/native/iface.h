@@ -17,19 +17,11 @@ JNIEXPORT jboolean JNICALL Java_processing_streaming_Streaming_gstreamer_1init
 
 /*
  * Class:     processing_streaming_Streaming
- * Method:    gstreamer_register
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_processing_streaming_Streaming_gstreamer_1register
-  (JNIEnv *, jobject);
-
-/*
- * Class:     processing_streaming_Streaming
  * Method:    gstreamer_loadFile
- * Signature: (Ljava/lang/String;)J
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL Java_processing_streaming_Streaming_gstreamer_1loadFile
-  (JNIEnv *, jobject, jstring);
+  (JNIEnv *, jobject, jstring, jstring);
 
 /*
  * Class:     processing_streaming_Streaming
@@ -69,6 +61,14 @@ JNIEXPORT jfloat JNICALL Java_processing_streaming_Streaming_gstreamer_1get_1dur
  * Signature: (J)F
  */
 JNIEXPORT jfloat JNICALL Java_processing_streaming_Streaming_gstreamer_1get_1time
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     processing_streaming_Streaming
+ * Method:    gstreamer_get_frame
+ * Signature: (J)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_processing_streaming_Streaming_gstreamer_1get_1frame
   (JNIEnv *, jobject, jlong);
 
 /*

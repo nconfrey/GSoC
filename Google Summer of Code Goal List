@@ -269,9 +269,11 @@ High Priority:
 	[] README for entire git repository
 	[] README for videoStreaming library project
 	[] Describe system setup (Linux, what packages I have, dependencies, Makefile adjustments)
-[] Proper credits in code / headers
-[] Clean old code / extra comments
+	[] README in examples folder
+[x] Proper credits in code / headers
+[x] Clean old code / extra comments
 [] Update examples from earlier in the summer with the new constructors and test to see that they still work
+[] Fill out library properties file
 [] Email Dan about progress for final evaluations
 
 Medium Priority (Would be nice to have for the GSoC submisssion):
@@ -283,7 +285,7 @@ Medium Priority (Would be nice to have for the GSoC submisssion):
 [] Threading on the audio streaming
 
 Low Priority (For next week or to add eventually, but not necessarily needed for the GSoC submission):
-[] 
+[] Thread everything (especially audio transmission)
 
 Next week tasks:
 [] Improve video quality? (open gl?)

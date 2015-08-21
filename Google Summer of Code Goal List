@@ -250,6 +250,43 @@ gst-launch-1.0 udpsrc multicast-group=127.0.0.1 auto-multicast=true port=6969 ca
 
 Taking working video camera streaming:
 gst-launch-1.0 v4l2src ! 'video/x-raw, width=640, height=480, framerate=30/1' ! videoconvert ! x264enc pass=qual quantizer=20 tune=zerolatency ! rtph264pay ! udpsink host=127.0.0.1 port=5555
-gst-launch-1.0 udpsrc port=5555 ! "application/x-rtp, payload=127" ! rtph264depay ! avdec_h264 ! videoconvert  ! xvimagesink sync=false
+gst-launch-1.0 udpsrc port=5555 ! "application/x-rtp, payload=127" ! rtph264depay ! avdec_h264 ! videoconvert  ! xvimagesink sync=true
 
-gst-launch-1.0 filesrc location=/home/nc/transit.mov ! videoparse width=640, height=480, framerate=30/1 ! videoconvert ! x264enc pass=qual quantizer=20 tune=zerolatency ! rtph264pay ! udpsink host=127.0.0.1 port=5555
+gst-launch-1.0 filesrc location=/home/nc/transit.mov ! videoparse width=640 height=480 framerate=30/1 ! videoconvert ! x264enc pass=qual quantizer=20 tune=zerolatency ! rtph264pay ! udpsink host=127.0.0.1 port=5555 sync=true
+
+THIS WORKS TO PLAY A FILE
+gst-launch-1.0 filesrc location=/home/nc/sample.mp4 ! decodebin name=dec ! queue ! videoconvert ! autovideosink dec. ! queue ! audioconvert ! audioresample ! autoaudiosink
+
+WORKS FOR MP4 STREAMING
+gst-launch-1.0 filesrc location=/home/nc/sample.mp4 ! decodebin name=dec ! queue ! videoconvert ! x264enc pass=qual quantizer=20 tune=zerolatency ! rtph264pay ! udpsink host=127.0.0.1 port=5555 sync=true dec. ! queue ! audioconvert ! audioresample ! autoaudiosink
+udpsrc port=5555 ! "application/x-rtp, payload=127" ! rtph264depay ! avdec_h264 ! videoconvert  ! xvimagesink sync=false
+
+Before end of day Friday (and before the GSoC pencils down date):
+Reminder - its probably best to just submit the actual library file for GSoC - look to make sure that it 
+
+High Priority:
+[] Write README in markdown (including a link to more recent developments)
+	[] README for entire git repository
+	[] README for videoStreaming library project
+	[] Describe system setup (Linux, what packages I have, dependencies, Makefile adjustments)
+[] Proper credits in code / headers
+[] Clean old code / extra comments
+[] Update examples from earlier in the summer with the new constructors and test to see that they still work
+[] Email Dan about progress for final evaluations
+
+Medium Priority (Would be nice to have for the GSoC submisssion):
+[] Split pipeline with audio and email back Gottfried / Andres
+[] Multicast stream audio with the video
+[] Have other built-in applications for streaming (webcam streaming)
+[] Screenshots / Videos / more extensive tutorials/demos
+[] fix not immediate start 'bug' - caps are only set at the beginning of the pipeline creation, so the video needs to cycle all the way through before the receiver get it. Or, just start the receiver first.
+[] Threading on the audio streaming
+
+Low Priority (For next week or to add eventually, but not necessarily needed for the GSoC submission):
+[] 
+
+Next week tasks:
+[] Improve video quality? (open gl?)
+[] Make independent of system gstreamer (or at least include the random plugins)
+[] Test on other systems
+[] Test Test Test

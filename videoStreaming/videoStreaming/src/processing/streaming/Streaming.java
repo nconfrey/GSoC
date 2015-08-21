@@ -26,7 +26,7 @@ package processing.streaming;
  * @modified    ##date##
  * @version     ##library.prettyVersion## (##library.version##)
  * 
- * HUGE Thanks to Andres Colubri, without his help this library wouldn't be possible
+ * HUGE Thanks to Andres Colubri and Gottfried Haider, without their help this library wouldn't be possible
  */
 
 import java.io.File;
@@ -37,31 +37,30 @@ public class Streaming {
 
 	private static boolean loaded = false;
 	private static boolean error = false;
+	
+	//Dimensions of the Processing screen
+	int height;
+	int width;
 
 	// capabilities passed to GStreamer
 	protected static String caps; //"video/x-raw,format=RGB,width=640,height=360,pixel-aspect-ratio=1/1";
-	// pipeline description passed to GStreamer
-	// first %s is the uri (filled in by native code)
-	// appsink must be named "sink" (XXX: change)
 	private static String pipeline;
-	//private static String pipeline = "udpsrc port=5555 caps=\"application/x-rtp, payload=127\" ! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\"";
-	//private static String pipeline = "uridecodebin uri=%s ! decodebin name=dec ! queue ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\" dec. ! queue ! audioconvert ! audioresample ! autoaudiosink";
-
 	
 	private long handle = 0;
 	private PApplet parent;
     private Method movieEventMethod;
 
-    //Use this constructor when just playing a movie
+    //Use this constructor when just playing a movie (no streaming)
 	public Streaming(PApplet parent, String fn, int width, int height) {
 		super();
         this.parent = parent;
+        this.width = width;
+        this.height = height;
         
         loadGstreamer(height, width);
 		
-		//Once again, do we need it to be a URI?
 
-		// get absolute path for fn
+		// get absolute path for filename
 		if (fn.indexOf("://") != -1) {
 			// got URI, use as is
 		} else {
@@ -76,9 +75,12 @@ public class Streaming {
 			}
 		}
 
-		//This is a simple pipeline to launch a video
-		//Videoconvert handles conversion between many different common video types
-		//the format string will be filled in in the native code
+		/*
+		 * This is a simple pipeline to launch a video
+		 * Videoconvert handles conversion between many different common video types
+		 * The format string will be filled in in the native code
+		 * appsink must be named "sink"
+		 */		
 		pipeline = "uridecodebin uri=%s ! videoconvert ! videoscale ! appsink name=sink caps=\"" + caps + "\"";
 		
 		//false because this pipeline is not streaming and needs to be loaded from the local disk
@@ -92,9 +94,12 @@ public class Streaming {
 	public Streaming(PApplet parent, int port, int width, int height) {
 		super();
         this.parent = parent;
+        this.width = width;
+        this.height = height;
         
 		loadGstreamer(height, width);
 		
+		// appsink must be named "sink"
 		pipeline = "udpsrc port=" + Integer.toString(port)
 				+ " caps=\"application/x-rtp, payload=127\" ! rtph264depay ! avdec_h264 ! videoconvert ! videoscale ! appsink name=sink caps=\"" 
 				+ caps + "\"";
@@ -116,17 +121,18 @@ public class Streaming {
 			if (gstreamer_init() == false) {
 				error = true;
 			}
+			
+	        //Give the dimensions to GStreamer, and tell it the format of the video
+			if(width > 0 && height > 0){
+				caps = "video/x-raw,format=RGB,"
+	        	 + "width=" + Integer.toString(width)
+	        	 + ",height=" + Integer.toString(height)
+	        	 + ",pixel-aspect-ratio=1/1";
+			}
 		}
-
 		if (error) {
 			throw new RuntimeException("Could not load gstreamer");
 		}
-		
-        //Give the dimensions to GStreamer, and tell it the format of the video
-        caps = "video/x-raw,format=RGB,"
-        	 + "width=" + Integer.toString(width)
-        	 + ",height=" + Integer.toString(height)
-        	 + ",pixel-aspect-ratio=1/1";
 		
         try {
           movieEventMethod = parent.getClass().getMethod("movieEvent", int[].class);
@@ -179,10 +185,10 @@ public class Streaming {
 	      return null;
 	    }
 
-	    PImage frame = parent.createImage(640, 360, PConstants.RGB);
+	    PImage frame = parent.createImage(width, height, PConstants.RGB);
 
-	    // XXX: not working quite right
-	    // XXX: we also need to handle the audio somehow
+	    // TODO: Colors are slightly off, need a better way to 
+	    // TODO: we also need to handle the audio somehow
 	    int idx = 0;
 	    frame.loadPixels();
 	    for (int i = 0; i < buffer.length/3; i++) {
@@ -210,9 +216,10 @@ public class Streaming {
 	    return frame;
 	  }
     
+	//Statically launch a pipeline - just a wrapper for native GStreamer functions
     public static void pipelineLaunch(String pipe)
     {
-		if (!loaded) {
+    	if (!loaded) {
 			System.out.println(System.getProperty("java.library.path"));
 			System.loadLibrary("streamvideo");
 			loaded = true;
@@ -220,12 +227,9 @@ public class Streaming {
 				error = true;
 			}
 		}
-
 		if (error) {
 			throw new RuntimeException("Could not load gstreamer");
 		}
-		
-		System.out.println("Looking like gstreamer has been loaded");
     	gstreamer_pipeline_launch(pipe);
     }
     
@@ -233,7 +237,7 @@ public class Streaming {
     //Use the corresponding method receiveAudio() to easily receive the stream
     public void streamAudio(String filepath)
     {
-    	streamAudio(filepath, 6969, "127.0.0.1");
+    	streamAudio(filepath, 8008, "127.0.0.1");
     }
     
     //TODO: Threading!
@@ -256,7 +260,7 @@ public class Streaming {
     //Assumes there is already data coming in from streamAudio(), receives from localhost and port 6969 (no argument default)
     public void receiveAudio()
     {
-    	receiveAudio(6969);
+    	receiveAudio(8008);
     }
     
     public void receiveAudio(int port)
@@ -265,6 +269,7 @@ public class Streaming {
     	gstreamer_pipeline_launch("udpsrc port=" + portt + " caps=\"application/x-rtp, media=(string)audio, format=(string)S32LE, layout=(string)interleaved, clock-rate=(int)44100, channels=(int)2, payload=(int)0\" ! rtpL16depay ! playsink");
     }
 
+    //Native methods are implemented in impl.c in the native folder
     private static native boolean gstreamer_init();
     private native long gstreamer_loadFile(String fn, String pipeline, boolean live);
     private native void gstreamer_play(long handle, boolean play);
